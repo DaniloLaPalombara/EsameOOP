@@ -1,98 +1,77 @@
 package it.univpm.ESAMEOOP.service;
 
+import java.util.*;
+
 public class Stats {
-	//TODO implementare metodi temperature minime e massime, media e varianza sia reali che percepite 
-
-	private Double max;
-	private Double min;
-	/**
-	 * Contatore della quantità di campioni utilizzati
-	 */
-	private Integer sampleNum;
-	/**
-	 * Accumulatore dei valori dei campioni utilizzati
-	 */
-	private Double accumulator;
-	/**
-	 * Vettore contenente i campioni utilizzati
-	 */
-	private Vector<Double> samples;
 	
-	/**
-	 * Costruttore di default
-	 */
-	public StatCalculator() {
-		this.max = -Double.MAX_VALUE;
-		this.min = Double.MAX_VALUE;
-		this.sampleNum = 0;
-		this.accumulator = 0.0;
-		this.samples = new Vector<Double>();
+	private Double tmax;
+	private Double tmin;
+	private Integer num;
+	private Double counter;
+	private Vector<Double> values;
+	
+	public Stats() {
+		this.tmax = -Double.MAX_VALUE;
+		this.tmin = Double.MAX_VALUE;
+		this.num = 0;
+		this.counter = 0.0;
+		this.values = new Vector<Double>();
+	}	
+		
+		
+	public void addValue(Double value) {
+		this.num++;
+		this.counter += counter;
+		
+		if(value>this.tmax)
+			this.tmax = value;
+		
+		if(value<this.tmin)
+			this.tmin = value;
+		
+		this.values.add(value);
+	}
+
+	public Double getTmax() {
+		
+		if(tmax==-Double.MAX_VALUE)
+			// TODO gestione errore
+		else{
+			return tmax;
+		}	
+	}
+			
+	public Double getTmin() {
+		
+		if(tmin==Double.MAX_VALUE)
+			//TODO gestione errore
+		else{
+			return tmin;
+		}	
+	}	
+	
+	public Double getAverage() {
+		
+		if(tmax==-Double.MAX_VALUE)
+			//TODO gestire errore
+		else{
+			return counter/num;
+		}	
 	}
 	
-	/**
-	 * Metodo per aggiungere dati
-	 * Esegue diverse operazioni on the fly per assegnare i corretti valori a
-	 * max, min, sampleNum, e accumulator
-	 * @param sample Campione contenente i dati
-	 */
-	public void addSample(Double sample) {
-		this.sampleNum++;
-		this.accumulator += sample;
-		if (sample > this.max)
-			this.max = sample;
-		if (sample < this.min)
-			this.min = sample;
-		this.samples.add(sample);
-	}
-
-	/**
-	 * @return the max
-	 * @throws MmwStatsException 
-	 */
-	public Double getMax() throws MmwStatsException {
-		if(max==-Double.MAX_VALUE)
-			throw new MmwStatsException("Assenza di campioni");
-		else
-			return max;
-	}
-
-	/**
-	 * @return the min
-	 * @throws MmwStatsException 
-	 */
-	public Double getMin() throws MmwStatsException {
-		if(min==Double.MAX_VALUE)
-			throw new MmwStatsException("Assenza di campioni");
-		else
-			return min;
-	}
-
-	/**
-	 * @return the variance
-	 * @throws MmwStatsException 
-	 */
-	public Double getVariance() throws MmwStatsException {
-		if(max==-Double.MAX_VALUE)
-			throw new MmwStatsException("Assenza di campioni");
-		else {
-			Double avg = this.getAverage();
+					
+	public Double getVariance() {
+		
+		if(tmax==-Double.MAX_VALUE)
+			//TODO gestione errore
+		else{
+			Double average = this.getAverage();
 			Double temp = 0.0;
-			for (Double sample : samples) {
-				temp += Math.pow((sample - avg), 2);
+			
+			for (Double value : values) {
+				temp += Math.pow((value-average), 2);
 			}
-			return round(temp/this.sampleNum);
+			return temp/this.num;
 		}
 	}
-	
-	/**
-	 * @return the average
-	 * @throws MmwStatsException 
-	 */
-	public Double getAverage() throws MmwStatsException {
-		if(max==-Double.MAX_VALUE)
-			throw new MmwStatsException("Assenza di campioni");
-		else
-			return round(accumulator/sampleNum);
-	}
-
 }
