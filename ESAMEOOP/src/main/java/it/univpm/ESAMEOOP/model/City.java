@@ -11,6 +11,7 @@ public class City {
 	private double temp_min;
 	private double lat;
 	private double lon;
+	//TODO eliminare parametri ed aggiungere vettore
 	
 	
 	public City (long id, String country, String name, double temp, double flike, double tmax, double tmin,double lat,double lon) {
