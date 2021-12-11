@@ -20,31 +20,25 @@ public class City {
 		this.lon=lon;
 	}
 
-
 	public double getId() {
 		return id;
 	}
-
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-
 	public String getCountry() {
 		return country;
 	}
-
 
 	public void setCountry(String country) {
 		this.country = country;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -54,33 +48,23 @@ public class City {
 		return lat;
 	}
 
-
 	public void setLat(double lat) {
 		this.lat = lat;
 	}
-
 
 	public double getLon() {
 		return lon;
 	}
 
-
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
-
 
 	public Vector<DataWeather> getDataweather() {
 		return dataweather;
 	}
 
-
 	public void setDataweather(Vector<DataWeather> dataweather) {
 		this.dataweather = dataweather;
 	}
-	
-	
-	
-
-	
 }
