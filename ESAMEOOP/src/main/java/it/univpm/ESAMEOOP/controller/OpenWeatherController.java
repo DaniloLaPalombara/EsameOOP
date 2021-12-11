@@ -4,8 +4,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OpenWeatherController {
-	@GetMapping(///"Nome rotta")
-			public //oggetto
+	@GetMapping("/currentWeather")
+			//TODO implementare
+	
+	@GetMapping("historicalWeather")
+	//TODO implementare
+	
+	
 			
 	
 
