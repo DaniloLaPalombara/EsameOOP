@@ -2,7 +2,7 @@ package it.univpm.ESAMEOOP.model;
 
 public class City {
 	
-	private double id;
+	private long id;
 	private String country;
 	private String name;
 	private double temp;
@@ -13,7 +13,7 @@ public class City {
 	private double lon;
 	
 	
-	public City (double id, String country, String name, double temp, double flike, double tmax, double tmin,double lat,double lon) {
+	public City (long id, String country, String name, double temp, double flike, double tmax, double tmin,double lat,double lon) {
 		this.id = id;
 		this.country = country;
 		this.name = name;
@@ -31,7 +31,7 @@ public class City {
 	}
 
 
-	public void setId(double id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
