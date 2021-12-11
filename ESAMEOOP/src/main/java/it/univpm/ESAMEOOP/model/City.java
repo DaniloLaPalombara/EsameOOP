@@ -1,27 +1,21 @@
 package it.univpm.ESAMEOOP.model;
 
+import java.util.Vector;
+
 public class City {
 	
 	private long id;
 	private String country;
 	private String name;
-	private double temp;
-	private double feels_like;
-	private double temp_max;
-	private double temp_min;
 	private double lat;
 	private double lon;
-	//TODO eliminare parametri ed aggiungere vettore
+	private Vector <DataWeather> dataweather= new Vector <>();
 	
 	
-	public City (long id, String country, String name, double temp, double flike, double tmax, double tmin,double lat,double lon) {
+	public City (long id, String country, String name,double lat,double lon) {
 		this.id = id;
 		this.country = country;
 		this.name = name;
-		this.temp = temp;
-		this.feels_like = flike;
-		this.temp_max = tmax;
-		this.temp_min = tmin;	
 		this.lat=lat;
 		this.lon=lon;
 	}
@@ -56,47 +50,6 @@ public class City {
 		this.name = name;
 	}
 
-
-	public double getTemp() {
-		return temp;
-	}
-
-
-	public void setTemp(double temp) {
-		this.temp = temp;
-	}
-
-
-	public double getFeels_like() {
-		return feels_like;
-	}
-
-
-	public void setFeels_like(double feels_like) {
-		this.feels_like = feels_like;
-	}
-
-
-	public double getTemp_max() {
-		return temp_max;
-	}
-
-
-	public void setTemp_max(double temp_max) {
-		this.temp_max = temp_max;
-	}
-
-
-	public double getTemp_min() {
-		return temp_min;
-	}
-
-
-	public void setTemp_min(double temp_min) {
-		this.temp_min = temp_min;
-	}
-
-
 	public double getLat() {
 		return lat;
 	}
@@ -115,6 +68,18 @@ public class City {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
+
+
+	public Vector<DataWeather> getDataweather() {
+		return dataweather;
+	}
+
+
+	public void setDataweather(Vector<DataWeather> dataweather) {
+		this.dataweather = dataweather;
+	}
+	
+	
 	
 
 	
