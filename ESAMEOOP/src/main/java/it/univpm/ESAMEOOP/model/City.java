@@ -22,6 +22,7 @@ public class City {
 	private double lat;
 	private double lon;
 	private long time;
+	//Vector<DataWeather>;
 	
 	
 	public City (long id, String country, String name,double lat,double lon, long time) {
