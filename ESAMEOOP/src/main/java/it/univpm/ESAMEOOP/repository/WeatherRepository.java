@@ -15,5 +15,4 @@ public interface WeatherRepository extends CrudRepository<City, long> {
 	List<City> GetValue(@Param("id") long id, @Param("start") Long start, @Param("stop") Long stop);
 		
 	City savedCity = WeatherRepository.save(city); //TODO dove va?
-	
 }
