@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Vector;
 
+import org.json.simple.*;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataWeather;
 
@@ -25,7 +27,7 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		// Ottengo la connessione al servizio
 		URLConnection Current=URL1.openConnection();
 		
-		// Preparo lo StringBuilder che accoglierà il JSON
+		// Preparo lo StringBuilder che accoglierï¿½ il JSON
 		StringBuilder Data = new StringBuilder();
 		
 		// Eseguo la request e leggo il risultato
@@ -36,7 +38,7 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		BufferedReader br = new BufferedReader(reader);
 		String line = null;
 		
-		// Leggo finchè ci sono dati da leggere
+		// Leggo finchï¿½ ci sono dati da leggere
 		while((line = br.readLine()) !=null)
 		{
 			Data.append(line);
@@ -46,12 +48,12 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		br.close();
 		
 		// Costruisco il JSON
-		JSONObject DataWeather = new JSONObject (Data.toString());
+		JSONObject DataWeather = new JSONObject(Data.toString());
 		return DataWeather;
 		
 	}
 	
-	public City setDataWeather (JSONObject dataWeather)
+	public City setDataWeather(JSONObject dataWeather)
 	{
 		//JSONParser parser = new JSONParses();
 		JSONObject cityInformation = (JSONObject) dataWeather.get("city");
@@ -62,12 +64,12 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		city.setLat((double)dataWeather.get("Lat"));
 		
 		JSONArray  list = (JSONArray)dataWeather.get("list");
-		Vector <DataWeather> forecast=new Vector <DataWeather>();
+		Vector <DataWeather> forecast=new Vector<DataWeather>();
 		for(int i = 0; i <list.size();i++)
 		{
 			JSONObject List = (JSONObject)list.get(i);
 			DataWeather data = new DataWeather();
-			JSONObject weather = (JSONObject)(JSONArray)List.get("weather");
+			JSONObject weather = (JSONArray)(JSONObject)List.get("weather");
 			JSONObject weather_description=(JSONObject)List.get("main");
 			
 			data.setDate((String)List.get("dt"));
@@ -80,6 +82,17 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		
 		city.setDataweather(forecast);
 		return city;
-		
+	}
 
+	@Override
+	public JSONObject createJSON(City city) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveFile(JSONObject obj) {
+		// TODO Auto-generated method stub
+		
+	}	
 }
