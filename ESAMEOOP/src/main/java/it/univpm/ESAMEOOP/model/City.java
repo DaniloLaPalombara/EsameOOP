@@ -1,12 +1,10 @@
 package it.univpm.ESAMEOOP.model;
 
-import java.util.Vector;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Table;
-
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Vector;
 
 @Entity
 
@@ -22,7 +20,7 @@ public class City {
 	private double lat;
 	private double lon;
 	private long time;
-	//Vector<DataWeather>;
+	Vector<DataWeather> = new Vector<>();
 	
 	
 	public City (long id, String country, String name,double lat,double lon, long time) {
@@ -82,12 +80,11 @@ public class City {
 		return time;
 	}
 
-	/*public Vector<DataWeather> getDataweather() {
+	public Vector<DataWeather> getDataweather() {
 		return dataweather;
 	}
 
 	public void setDataweather(Vector<DataWeather> dataweather) {
 		this.dataweather = dataweather;
 	}
-	*/ //TODO Servono davvero?
 }
