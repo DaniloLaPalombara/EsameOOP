@@ -6,13 +6,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Vector;
 
-@Entity
+//@Entity
 
-@Table(name = "Weather")
+//@Table(name = "Weather")
 public class City {
 	
-	@Id
-	@GeneretedValue(strategy = GenerationType.AUTO);
+	//@Id
+	//@GeneretedValue(strategy = GenerationType.AUTO);
 	
 	private long id;
 	private String country;
@@ -20,17 +20,17 @@ public class City {
 	private double lat;
 	private double lon;
 	private long time;
-	Vector<DataWeather> = new Vector<>();
+	Vector<DataWeather> dataweather= new Vector<>();
 	
 	
-	public City (long id, String country, String name,double lat,double lon, long time) {
+	/*public City (long id, String country, String name,double lat,double lon, long time) {
 		this.id = id;
 		this.country = country;
 		this.name = name;
 		this.lat=lat;
 		this.lon=lon;
 		this.time=time;
-	}
+	}*/
 
 	public double getId() {
 		return id;
