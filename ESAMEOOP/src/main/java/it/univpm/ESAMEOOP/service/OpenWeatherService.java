@@ -91,6 +91,7 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			forecastData.add(data);	
 		}
 		
+		
 		city.setForecast(forecastData);
 		return city;
 	}
