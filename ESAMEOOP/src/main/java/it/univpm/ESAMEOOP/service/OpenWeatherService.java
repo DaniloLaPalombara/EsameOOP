@@ -1,6 +1,8 @@
 package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,30 +11,33 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
 
+import org.json.*;
 import org.json.simple.*;
 import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
 
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataWeather;
 
+@Service
 public class OpenWeatherService implements OpenWeatherInterface {
-	
 	
 	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 	private String URLCurrent="api.openweathermap.org/data/2.5/weather?id=";
-	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
-	City city;
+	//private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
+
 	
 	@Override
-	public JSONObject getDataWeather(long id)
-	{
+	public JSONObject getDataWeather(long id) {
+		//JSONObject forecast = null;
+		JSONObject forecast = new JSONObject();
 		
-		JSONObject fullInformation=null;
 		try {
 			URLConnection openConnection = new URL(URLCurrent+id+"&appid="+Apikey).openConnection();
 			InputStream in = openConnection.getInputStream();
 			String data= "";
-			String line="";
+			String line= "";
+	    try {
 			InputStreamReader reader= new InputStreamReader(in);
 			BufferedReader buf = new BufferedReader(reader);
 			
@@ -40,62 +45,59 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			{
 				data+=line;
 			}
+	     } finally {
 			in.close();
-			
-			try {
-				fullInformation = (JSONObject) JSONValue.parseWithException(data);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+	        forecast = (JSONObject) JSONValue.parseWithException(data);
+	    
+		} catch (ParseException | IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	    }
+          catch (Exception e) {
+        	  e.printStackTrace();
 		}
-		return fullInformation;
-
-				
-				
-	}	
+		return forecast;			
+	}
+	
 	@Override
-	public City setDataWeather(JSONObject fullInformation)
+	public City setDataWeather(JSONObject obj)
 	{
 		City city= new City();
-		//JSONParser parser = new JSONParses();
-		JSONObject cityInformation = (JSONObject)fullInformation.get("city");
+		Vector<DataWeather> forecastData = new Vector<DataWeather>();
+		JSONObject cityInformation = (JSONObject)obj.get("city");
+		JSONArray list = (JSONArray)obj.get("list");
+		
 		city.setName((String)cityInformation.get("name"));
 		city.setCountry((String)cityInformation.get("country"));
 		city.setId((long)cityInformation.get("id"));
 		city.setLon((double)cityInformation.get("Lon"));
 		city.setLat((double)cityInformation.get("Lat"));
 		
-		JSONArray list = (JSONArray)fullInformation.get("list");
-		Vector <DataWeather> forecast=new Vector<DataWeather>();
 		for(int i = 0; i <list.size();i++)
 		{
-			JSONObject List = (JSONObject)list.get(i);
+			JSONObject listElement = (JSONObject)list.get(i);
 			DataWeather data = new DataWeather();
-			//JSONObject weather = (JSONObject)(JSONOArray)List.get("weather");//Controllare bene
-			//JSONObject weather_description=(JSONObject)List.get("main");
 			
-			data.setDate((String)List.get("dt"));
-			data.setFeels_like((double)List.get("feels_like"));
-			data.setTemp((double)List.get("emp"));
-			data.setTemp_MIN((double)List.get("temp_min"));
-			data.setTemp_MAX((double)List.get("temp_max"));
-			forecast.add(data);			
+			JSONObject info = (JSONObject)((JSONArray)listElement.get("info")).get(i);
+			//JSONObject main=(JSONObject)listElement.get("main");
+			
+			data.setDate((String)listElement.get("dt"));
+			data.setFeels_like((double)listElement.get("feels_like"));
+			data.setTemp((double)listElement.get("temp"));
+			data.setTemp_MIN((double)listElement.get("temp_min"));
+			data.setTemp_MAX((double)listElement.get("temp_max"));
+			//data.setWeather((String)weather.get("main"));
+			forecastData.add(data);	
 		}
 		
-		city.setDataweather(forecast);
+		city.setForecast(forecastData);
 		return city;
 	}
 
 	@Override
 	public JSONObject createJSON(City city) {
+		
 		JSONObject out = new JSONObject();
 		out.put("City", city.getName());
 		out.put("Id:", city.getId());
@@ -103,32 +105,32 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		out.put("Lon", city.getLon());
 		out.put("Country", city.getCountry());
 		
-		JSONArray weather = new JSONArray();
-		for(DataWeather data:city.getDataweather())
+		JSONArray info = new JSONArray();
+		
+		for(DataWeather data:city.getForecast())
 		{
-			JSONObject WeatherData = new JSONObject();
-			WeatherData.put("Date", data.getDate());
-			WeatherData.put("Feels_like", data.getFeels_like());
-			WeatherData.put("Temp", data.getTemp());
-			WeatherData.put("Temp_MAX", data.getTemp_MAX());
-			WeatherData.put("Temp_MIN", data.getTemp_MIN());
-			WeatherData.put("Weather:", data.getWeather());
-			WeatherData.put("Descriprion:", data.getWeather_description());
-			
-			weather.add(WeatherData);
+			JSONObject forecast = new JSONObject();
+			forecast.put("Date", data.getDate());
+			forecast.put("Feels_like", data.getFeels_like());
+			forecast.put("Temp", data.getTemp());
+			forecast.put("Temp_MAX", data.getTemp_MAX());
+			forecast.put("Temp_MIN", data.getTemp_MIN());
+			//forecast.put("Weather:", data.());
+			//WeatherData.put("Descriprion:", data.getWeather_description());
+
+			info.add(forecast);
 			
 		}
 		JSONObject obj = new JSONObject();
 	    obj.put("", out);      
-		obj.put("Information:", weather);
+		obj.put("Information:", info);
 		
 		return obj;
 
 	}
 
-	@Override
+	/*@Override
 	public void saveFile(JSONObject obj) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub*/
 		
-	}	
 }

@@ -13,9 +13,7 @@ public class DataWeather {
 	 private double feels_like;
 	 private double temp_MIN;
 	 private double temp_MAX;
-	 String weather;
-	 String weather_description;
-	
+	 
 	 
 	public long getDate_UNIX() {
 		return date_UNIX;
@@ -35,7 +33,6 @@ public class DataWeather {
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTimeInMillis(date_UNIX*1000);
 	    return this.date=dateFormat.format(cal.getTime());
-	    //TODO chiedere al prof
 	}
 	
 	public double getTemp() {
@@ -68,21 +65,5 @@ public class DataWeather {
 	
 	public void setTemp_MAX(double temp_MAX) {
 		this.temp_MAX = temp_MAX;
-	}
-	
-	public String getWeather() {
-		return weather;
-	}
-	
-	public void setWeather(String weather) {
-		this.weather = weather;
-	}
-	
-	public String getWeather_description() {
-		return weather_description;
-	}
-	
-	public void setWeather_description(String weather_description) {
-		this.weather_description = weather_description;
 	}
 }

@@ -1,36 +1,16 @@
 package it.univpm.ESAMEOOP.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Vector;
 
-//@Entity
-
-//@Table(name = "Weather")
 public class City {
 	
-	//@Id
-	//@GeneretedValue(strategy = GenerationType.AUTO);
-	
-	private long id;
+	protected long id;
 	private String country;
 	private String name;
 	private double lat;
 	private double lon;
-	private long time;
-	Vector<DataWeather> dataweather= new Vector<>();
+	private Vector<DataWeather> forecast;
 	
-	
-	/*public City (long id, String country, String name,double lat,double lon, long time) {
-		this.id = id;
-		this.country = country;
-		this.name = name;
-		this.lat=lat;
-		this.lon=lon;
-		this.time=time;
-	}*/
 
 	public double getId() {
 		return id;
@@ -71,20 +51,12 @@ public class City {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
-	
-	public void setTime(long time) {
-		this.time = time;
-	}
-	
-	public long getTime(long time) {
-		return time;
+
+	public Vector<DataWeather> getForecast() {
+		return forecast;
 	}
 
-	public Vector<DataWeather> getDataweather() {
-		return dataweather;
-	}
-
-	public void setDataweather(Vector<DataWeather> dataweather) {
-		this.dataweather = dataweather;
+	public void setForecast(Vector<DataWeather> forecast) {
+		this.forecast = forecast;
 	}
 }

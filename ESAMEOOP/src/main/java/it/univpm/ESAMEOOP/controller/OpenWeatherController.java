@@ -2,6 +2,9 @@ package it.univpm.ESAMEOOP.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+//import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,7 @@ import it.univpm.ESAMEOOP.service.OpenWeatherService;
 @RestController
 public class OpenWeatherController {
 
+	@Autowired
 	OpenWeatherService openweatherservice;
 	
 	@RequestMapping(value = "/default")
