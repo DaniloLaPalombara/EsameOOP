@@ -36,13 +36,8 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			URLConnection openConnection = new URL(URLCurrent+id+"&appid="+Apikey).openConnection();
 			InputStream in = openConnection.getInputStream();
 			String data= "";
-<<<<<<< HEAD
 			String line= "";
 	    try {
-=======
-			String line="";
-	try {
->>>>>>> refs/remotes/origin/main
 			InputStreamReader reader= new InputStreamReader(in);
 			BufferedReader buf = new BufferedReader(reader);
 			
@@ -50,16 +45,10 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			{
 				data+=line;
 			}
-<<<<<<< HEAD
 	     } finally {
-=======
-	   }
-			finally {
->>>>>>> refs/remotes/origin/main
 			in.close();
 			}
-			
-<<<<<<< HEAD
+	    
 	        forecast = (JSONObject) JSONValue.parseWithException(data);
 	    
 		} catch (ParseException | IOException e) {
@@ -67,18 +56,8 @@ public class OpenWeatherService implements OpenWeatherInterface {
 	    }
           catch (Exception e) {
         	  e.printStackTrace();
-=======
-
-	fullInformation = (JSONObject) JSONValue.parseWithException(data);
-			} catch (ParseException | IOException e) {
-
-				e.printStackTrace();
-			}
-          catch (Exception e) {
-
-			e.printStackTrace();
->>>>>>> refs/remotes/origin/main
-		}
+          }	  
+		
 		return forecast;			
 	}
 	
@@ -100,13 +79,10 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		{
 			JSONObject listElement = (JSONObject)list.get(i);
 			DataWeather data = new DataWeather();
-<<<<<<< HEAD
-=======
-			JSONObject weather = (JSONObject)((JSONArray)List.get("weather"));//Controllare bene
-			//JSONObject weather_description=(JSONObject)List.get("main");
->>>>>>> refs/remotes/origin/main
 			
-<<<<<<< HEAD
+			//JSONObject weather = (JSONObject)((JSONArray)List.get("weather")).get(i);
+			//JSONObject weather_description=(JSONObject)List.get("main");
+			
 			JSONObject info = (JSONObject)((JSONArray)listElement.get("info")).get(i);
 			//JSONObject main=(JSONObject)listElement.get("main");
 			
@@ -117,17 +93,6 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			data.setTemp_MAX((double)listElement.get("temp_max"));
 			//data.setWeather((String)weather.get("main"));
 			forecastData.add(data);	
-=======
-			data.setDate((String)List.get("dt"));
-			data.setFeels_like((double)List.get("feels_like"));
-			data.setTemp((double)List.get("temp"));
-			data.setTemp_MIN((double)List.get("temp_min"));
-			data.setTemp_MAX((double)List.get("temp_max"));
-			data.setWeather((String)weather.get("main"));
-			forecast.add(data);	
-			
-	
->>>>>>> refs/remotes/origin/main
 		}
 		
 		city.setForecast(forecastData);
