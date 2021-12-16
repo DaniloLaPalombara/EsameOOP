@@ -20,8 +20,8 @@ public class OpenWeatherService implements OpenWeatherInterface {
 	
 	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 	private String URLCurrent="api.openweathermap.org/data/2.5/weather?id=";
-	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
-	City city;
+	//private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
+
 	
 	@Override
 	public JSONObject getDataWeather(long id)
@@ -33,6 +33,7 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			InputStream in = openConnection.getInputStream();
 			String data= "";
 			String line="";
+	try {
 			InputStreamReader reader= new InputStreamReader(in);
 			BufferedReader buf = new BufferedReader(reader);
 			
@@ -40,20 +41,19 @@ public class OpenWeatherService implements OpenWeatherInterface {
 			{
 				data+=line;
 			}
+	   }
+			finally {
 			in.close();
-			
-			try {
-				fullInformation = (JSONObject) JSONValue.parseWithException(data);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
+	fullInformation = (JSONObject) JSONValue.parseWithException(data);
+			} catch (ParseException | IOException e) {
+
+				e.printStackTrace();
+			}
+          catch (Exception e) {
+
 			e.printStackTrace();
 		}
 		return fullInformation;
@@ -79,15 +79,18 @@ public class OpenWeatherService implements OpenWeatherInterface {
 		{
 			JSONObject List = (JSONObject)list.get(i);
 			DataWeather data = new DataWeather();
-			//JSONObject weather = (JSONObject)(JSONOArray)List.get("weather");//Controllare bene
+			JSONObject weather = (JSONObject)((JSONArray)List.get("weather"));//Controllare bene
 			//JSONObject weather_description=(JSONObject)List.get("main");
 			
 			data.setDate((String)List.get("dt"));
 			data.setFeels_like((double)List.get("feels_like"));
-			data.setTemp((double)List.get("emp"));
+			data.setTemp((double)List.get("temp"));
 			data.setTemp_MIN((double)List.get("temp_min"));
 			data.setTemp_MAX((double)List.get("temp_max"));
-			forecast.add(data);			
+			data.setWeather((String)weather.get("main"));
+			forecast.add(data);	
+			
+	
 		}
 		
 		city.setDataweather(forecast);
