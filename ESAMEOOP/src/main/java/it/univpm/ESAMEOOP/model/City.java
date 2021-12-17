@@ -2,6 +2,9 @@ package it.univpm.ESAMEOOP.model;
 
 import java.util.Vector;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class City {
 	
 	protected long id;
