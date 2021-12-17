@@ -10,25 +10,43 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.service.OpenWeatherService;
+import it.univpm.ESAMEOOP.service.OpenWeatherServiceHistory;
 
 
 @RestController
 public class OpenWeatherController {
 
+	@RequestMapping(value ="/prova")
+	public City getString(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+			,@RequestParam(name="end",defaultValue="1628796785")Integer stop)
+	{
+		openweatherservicehistory.setStart(start);
+		openweatherservicehistory.setStop(stop);
+		openweatherservicehistory.setType(type);
+		return openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087)) ;
+	}
 	@Autowired
 	OpenWeatherService openweatherservice;
+	@Autowired
+	OpenWeatherServiceHistory openweatherservicehistory;
 	
-	@RequestMapping(value = "/default")
+	@RequestMapping(value = "/defaultlocation")
 	public ResponseEntity <Object> getforecast()
 	{
 		return new ResponseEntity<>(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(3183087))),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/default1")
-	public ResponseEntity <Object> getforecas()
+	public ResponseEntity <Object> getforecas(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+			,@RequestParam(name="end",defaultValue="1628796785")Integer stop)
 	{
-		return new ResponseEntity<>(openweatherservice.getDataWeather(3183087),HttpStatus.OK);
+		openweatherservicehistory.setStart(start);
+		openweatherservicehistory.setStop(stop);
+		openweatherservicehistory.setType(type);
+		return new ResponseEntity<>(openweatherservicehistory.getDataWeather(3183087),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/CurrentWeather")
@@ -37,13 +55,13 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))),HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/default1")
-	public ResponseEntity <Object> getforecas(@RequestParam(name="interval",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
-			,@RequestParam(name="stop",defaultValue="1628778785")Integer stop)
+	@RequestMapping(value = "/default3")
+	public ResponseEntity <Object> getforecast(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id)
 	{
 		openweatherservicehistory.setStart(start);
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
-		return new ResponseEntity<>(openweatherservicehistory.getDataWeather(3183087),HttpStatus.OK);
+		return new ResponseEntity<>(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),HttpStatus.OK);
 	}
 }

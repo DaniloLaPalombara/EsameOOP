@@ -12,7 +12,7 @@ public class City {
 	private String name;
 	private double lat;
 	private double lon;
-	private Vector<DataWeather> forecast;
+	private Vector<DataWeather> forecast = new Vector<>();
 	
 
 	public double getId() {
