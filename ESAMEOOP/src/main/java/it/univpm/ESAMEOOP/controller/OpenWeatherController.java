@@ -37,4 +37,13 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))),HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/default1")
+	public ResponseEntity <Object> getforecas(@RequestParam(name="interval",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+			,@RequestParam(name="stop",defaultValue="1628778785")Integer stop)
+	{
+		openweatherservicehistory.setStart(start);
+		openweatherservicehistory.setStop(stop);
+		openweatherservicehistory.setType(type);
+		return new ResponseEntity<>(openweatherservicehistory.getDataWeather(3183087),HttpStatus.OK);
+	}
 }
