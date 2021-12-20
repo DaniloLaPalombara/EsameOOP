@@ -1,6 +1,7 @@
 package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,14 +16,23 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import it.univpm.ESAMEOOP.model.City;
-import it.univpm.ESAMEOOP.model.DataWeather;
+import it.univpm.ESAMEOOP.model.DataTemp;
+/**
+ *
+ * @Service è
+ * 
+ * @author danil
+ *
+ */
 
 @Service
-public class OpenWeatherServiceHistory extends OpenWeatherService {
+public class TempServiceHistory implements TempInterface {
+	
 	private String type;
 	private long start;
 	private long stop;
-	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";	
+	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
+	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 	
 	public String getType() {
 		return type;
@@ -94,13 +104,13 @@ public class OpenWeatherServiceHistory extends OpenWeatherService {
 	@Override
 	public City setDataWeather(JSONObject fullInformation)
 	{
-		DataWeather data = new DataWeather();
+		DataTemp data = new DataTemp();
 		City city=new City();
 		JSONObject info=(JSONObject)fullInformation;
 		city.setId((long)info.get("city_id"));
 		
 		JSONArray list = (JSONArray)info.get("list");
-		Vector <DataWeather> forecast = new Vector<>();
+		Vector <DataTemp> forecast = new Vector<>();
 		for(int i = 0; i < list.size();i++)
 		{
 		    JSONObject List = (JSONObject)list.get(i);
@@ -111,13 +121,12 @@ public class OpenWeatherServiceHistory extends OpenWeatherService {
 			data.setTemp((double)main.get("temp"));
 			data.setTemp_MIN((double)main.get("temp_min"));
 			data.setTemp_MAX((double)main.get("temp_max"));
+			
 			forecast.add(data);
 			List.clear();
-
 		}
-		city.setDataweather(forecast);
+		city.setDataTemp(forecast);
 		return city;
-		
 	}
 	
 	@Override
@@ -127,7 +136,7 @@ public class OpenWeatherServiceHistory extends OpenWeatherService {
 		out.put("Id:", city.getId());
 		
 		JSONArray weather = new JSONArray();
-		for(DataWeather data:city.getDataweather())
+		for(DataTemp data:city.getDataTemp())
 		{
 			JSONObject WeatherData = new JSONObject();
 			WeatherData.put("Date", data.getDate());
@@ -144,8 +153,6 @@ public class OpenWeatherServiceHistory extends OpenWeatherService {
 		obj.put("Weather Information:", weather);
 		
 		return obj;
-
-	
 	}
 
 }
