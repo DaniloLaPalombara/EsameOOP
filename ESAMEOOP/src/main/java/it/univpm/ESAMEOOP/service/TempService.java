@@ -52,7 +52,7 @@ public class TempService implements TempInterface {
 			JSONObject fullInformation=new JSONObject();
 			
 			try {
-				URLConnection openConnection = new URL(URLCurrent+id+"&appid="+Apikey).openConnection();
+				URLConnection openConnection = new URL(URLCurrent+id+"&units=metric"+"&appid="+Apikey).openConnection();
 				InputStream in = openConnection.getInputStream();
 				
 				String data= " ";
@@ -97,8 +97,8 @@ public class TempService implements TempInterface {
 			JSONObject country=(JSONObject)cityData.get("sys");
 			city.setCountry((String)country.get("country"));		
 			JSONObject cord = (JSONObject)cityData.get("coord");
-			//city.setLon((float)cord.get("lon"));
-			//city.setLat((float)cord.get("lat"));
+			city.setLon((double)cord.get("lon"));
+			city.setLat((double)cord.get("lat"));
 
 			JSONObject list = (JSONObject)cityData.get("main");
 			Vector <DataTemp> forecast=new Vector<DataTemp>();

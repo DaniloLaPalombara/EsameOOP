@@ -64,19 +64,19 @@ public class DataTemp {
 	 * @return date
 	 */
 	public String getDate() {
-		return date;
-	}
-	
-	/**
-	 * @param date
-	 * @return date in formato UNIX
-	 */
-	public String setDate(String date) {
-		
 	    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTimeInMillis(date_UNIX*1000);
 	    return this.date=dateFormat.format(cal.getTime());
+	}
+	
+	/**
+	 * @param date
+	 * @return date 
+	 */
+	public String setDate(String date) {
+		return this.date=date;
+
 	}
 	
 	/**
