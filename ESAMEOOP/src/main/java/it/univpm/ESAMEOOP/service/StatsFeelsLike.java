@@ -1,15 +1,13 @@
 package it.univpm.ESAMEOOP.service;
 
-import java.util.*;
+import java.util.Vector;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
-import it.univpm.ESAMEOOP.model.DataTemp;
-
 @Component
-public class Stats {
+public class StatsFeelsLike implements StatsInterface {
 	
 	private double tmax;
 	private double tmin;
@@ -18,41 +16,24 @@ public class Stats {
 	private Vector<Double> values;
 	JSONObject obj =new JSONObject();
 	
-		
-	/*public void addValue(Double value) {
-		this.num++;
-		this.counter += counter;
-		
-		if(value>this.tmax)
-			this.tmax = value;
-		
-		if(value<this.tmin)
-			this.tmin = value;
-		
-		this.values.add(value);
-	}*/
-
+	@Override
 	public double getTempMax(JSONObject obj) {
 		
-		//return  Collection.max(forecast,null);
 		JSONArray weather =(JSONArray)obj.get("Weather Information:");
 		for(int i=0; i<weather.size();i++)
 		{
 			JSONObject TempMax=(JSONObject)weather.get(i);
-			double tempMax = (double) TempMax.get("Temp_MAX");
+			double tempMax = (double) TempMax.get("Feels_like");
 			if(tempMax >tmax)
 			{
 				tmax=tempMax;
 			}
 		}
 		
-		
-		return tmax;
-		
-
-			
+		return tmax;		
 	}
-			
+	
+	@Override
 	public double getTempMin(JSONObject obj) {
 		
 		double tmin = 1000000;
@@ -60,17 +41,17 @@ public class Stats {
 		for(int i=0; i<weather.size();i++)
 		{
 			JSONObject TempMin=(JSONObject)weather.get(i);
-			double tempMin = (double) TempMin.get("Temp_MIN");
+			double tempMin = (double) TempMin.get("Feels_like");
 			if(tempMin <tmin)
 			{
 				tmin=tempMin;
 			}
 		}
 		
-		
 		return tmin;	
 	}	
 	
+	@Override
 	public double getAverage(JSONObject obj) {
 		
 		int counter = 0;
@@ -78,12 +59,17 @@ public class Stats {
 		for(int i=0; i<weather.size();i++)
 		{
 			JSONObject TempAverage=(JSONObject)weather.get(i);
-			double tempAverage = (double) TempAverage.get("Temp");
+			double tempAverage = (double) TempAverage.get("Feels_like");
 				temp+=tempAverage;
 		}
 		
-		
 		return Math.round((temp/weather.size()*100)/100);	
+	}
+
+	@Override
+	public double getVariance(JSONObject obj) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }

@@ -28,7 +28,7 @@ public class TempController {
 		openweatherservicehistory.setStart(start);
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
-		return new ResponseEntity<>(openweatherservicehistory.statist((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);
+		return new ResponseEntity<>(openweatherservicehistory.Statits((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/default1")

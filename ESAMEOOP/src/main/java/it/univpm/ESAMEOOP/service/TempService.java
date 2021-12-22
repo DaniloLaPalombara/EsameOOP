@@ -102,6 +102,7 @@ public class TempService implements TempInterface {
 
 			JSONObject list = (JSONObject)cityData.get("main");
 			Vector <DataTemp> forecast=new Vector<DataTemp>();
+			
 			data.setFeels_like((double)list.get("feels_like"));
 			data.setTemp((double)list.get("temp"));
 			data.setTemp_MIN((double)list.get("temp_min"));
@@ -116,7 +117,7 @@ public class TempService implements TempInterface {
 				
 			}
 				forecast.add(data);	
-			
+		
 			city.setDataTemp(forecast);
 			return city;
 		}
@@ -137,6 +138,7 @@ public class TempService implements TempInterface {
 			out.put("Country", city.getCountry());
 			
 			JSONArray weather = new JSONArray();
+			
 			for(DataTemp data:city.getDataTemp())
 			{
 				JSONObject WeatherData = new JSONObject();
@@ -157,4 +159,6 @@ public class TempService implements TempInterface {
 			
 			return obj;		
 		}	
+		
+		
 }

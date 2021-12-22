@@ -22,7 +22,7 @@ import it.univpm.ESAMEOOP.model.DataTemp;
  *
  * @Service è
  * 
- * @author danil
+ * @author daniloLa
  *
  */
 
@@ -164,15 +164,27 @@ public class TempServiceHistory implements TempInterface {
 		return obj;
 	}
 	
-	public JSONObject statist(JSONObject obj)
+	public JSONObject Statits(JSONObject obj)
 	{
-		Stats Stats=new Stats();
-		JSONObject stats = new JSONObject(); 
-		stats.put("Temp_MAX",  Stats.getTempMax(obj));
-		stats.put("Temp_MIN",Stats.getTempMin(obj));
-		stats.put("Average", Stats.getAverage(obj));
-		return stats;
+		StatsTemp StatsT = new StatsTemp();
+		JSONObject statsT = new JSONObject(); 
 		
+		statsT.put("Temp_MAX",  StatsT.getTempMax(obj));
+		statsT.put("Temp_MIN",StatsT.getTempMin(obj));
+		statsT.put("Average", StatsT.getAverage(obj));
+		
+		StatsFeelsLike StatsFL = new StatsFeelsLike();
+		JSONObject statsFL = new JSONObject();
+		
+		statsFL.put("Temp_MAX",  StatsFL.getTempMax(obj));
+		statsFL.put("Temp_MIN",StatsFL.getTempMin(obj));
+		statsFL.put("Average", StatsFL.getAverage(obj));
+		
+		JSONObject sts = new JSONObject();
+	    sts.put("Temperature statistics", statsT);      
+		sts.put("Feels like statistics:", statsFL);
+		
+		return sts;
 	}
 
 }

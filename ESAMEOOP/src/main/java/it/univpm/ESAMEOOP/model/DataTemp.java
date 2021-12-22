@@ -39,7 +39,7 @@ public class DataTemp {
 	  */
 	 private double temp_MIN;
 	 /**
-	  * 
+	  * temperatura massima osservata
 	  */
 	 private double temp_MAX;
 	 String weather;
