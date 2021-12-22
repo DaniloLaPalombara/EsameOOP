@@ -1,12 +1,15 @@
 package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
-
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.Vector;
 
 import org.json.simple.*;
@@ -152,5 +155,52 @@ public class TempService implements TempInterface {
 			obj.put("Weather Information:", weather);
 			
 			return obj;		
-		}		
+		}
+		
+		public void saveFile(JSONObject obj)
+		{
+		try {
+			 File dbOrig = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt");
+		     File dbCopy = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.json");
+		     Files.copy( dbOrig.toPath(), dbCopy.toPath() );
+		     
+		     
+		     /*InputStream in = new FileInputStream(dbOrig);
+		     OutputStream out = new FileOutputStream(dbCopy);
+		     byte[] buf = new byte[1024];
+		     int len;
+		     while ((len = in.read(buf)) > 0) {
+		        out.write(buf, 0, len);
+		     }
+		     in.close();*/
+			BufferedWriter writer = new BufferedWriter(new FileWriter
+				    (dbCopy));//"C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt"));
+			JSONArray weather = (JSONArray)obj.get("Weather Information:");
+			for (int i = 0; i<weather.size();i++)
+			{
+			        
+			        JSONObject Temp = (JSONObject)weather.get(i);
+					DataTemp data= new DataTemp();
+			        data.setTemp((double) Temp.get("Temp"));
+				    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
+				    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+				    data.setFeels_like((double) Temp.get("Feels_like"));
+				    writer.write("Temp: "+data.getTemp()+"\n");
+				    writer.write("Temp_MIN: "+data.getTemp_MIN()+"\n");
+				    writer.write("Temp_MAX: "+data.getTemp_MAX()+"\n");
+				    writer.write("Feels_like: "+data.getFeels_like()+"\n");
+				    
+				  //  out.close();
+			   
+
+
+			}
+			writer.close();
+
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
