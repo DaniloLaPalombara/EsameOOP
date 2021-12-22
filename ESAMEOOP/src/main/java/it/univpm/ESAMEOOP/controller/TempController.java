@@ -22,13 +22,13 @@ public class TempController {
 	
 
 	@RequestMapping(value ="/prova")
-	public City getString(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+	public ResponseEntity <Object> getString(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
 			,@RequestParam(name="end",defaultValue="1628796785")Integer stop)
 	{
 		openweatherservicehistory.setStart(start);
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
-		return openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087)) ;
+		return new ResponseEntity<>(openweatherservicehistory.statist((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/default1")

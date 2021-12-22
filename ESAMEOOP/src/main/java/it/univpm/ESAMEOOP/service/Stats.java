@@ -2,24 +2,24 @@ package it.univpm.ESAMEOOP.service;
 
 import java.util.*;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
+
+import it.univpm.ESAMEOOP.model.DataTemp;
+
+@Component
 public class Stats {
 	
-	private Double tmax;
-	private Double tmin;
+	private double tmax;
+	private double tmin;
+	private double temp;
 	private Integer num;
-	private Double counter;
 	private Vector<Double> values;
+	JSONObject obj =new JSONObject();
 	
-	public Stats() {
-		this.tmax = -Double.MAX_VALUE;
-		this.tmin = Double.MAX_VALUE;
-		this.num = 0;
-		this.counter = 0.0;
-		this.values = new Vector<Double>();
-	}	
 		
-		
-	public void addValue(Double value) {
+	/*public void addValue(Double value) {
 		this.num++;
 		this.counter += counter;
 		
@@ -30,48 +30,60 @@ public class Stats {
 			this.tmin = value;
 		
 		this.values.add(value);
-	}
+	}*/
 
-	public Double getTmax() {
+	public double getTempMax(JSONObject obj) {
 		
-		if(tmax==-Double.MAX_VALUE)
-			// TODO gestione errore
-		else{
-			return tmax;
-		}	
+		//return  Collection.max(forecast,null);
+		JSONArray weather =(JSONArray)obj.get("Weather Information:");
+		for(int i=0; i<weather.size();i++)
+		{
+			JSONObject TempMax=(JSONObject)weather.get(i);
+			double tempMax = (double) TempMax.get("Temp_MAX");
+			if(tempMax >tmax)
+			{
+				tmax=tempMax;
+			}
+		}
+		
+		
+		return tmax;
+		
+
+			
 	}
 			
-	public Double getTmin() {
+	public double getTempMin(JSONObject obj) {
 		
-		if(tmin==Double.MAX_VALUE)
-			//TODO gestione errore
-		else{
-			return tmin;
-		}	
+		double tmin = 1000000;
+		JSONArray weather =(JSONArray)obj.get("Weather Information:");
+		for(int i=0; i<weather.size();i++)
+		{
+			JSONObject TempMin=(JSONObject)weather.get(i);
+			double tempMin = (double) TempMin.get("Temp_MIN");
+			if(tempMin <tmin)
+			{
+				tmin=tempMin;
+			}
+		}
+		
+		
+		return tmin;	
 	}	
 	
-	public Double getAverage() {
+	public double getAverage(JSONObject obj) {
 		
-		if(tmax==-Double.MAX_VALUE)
-			//TODO gestire errore
-		else{
-			return counter/num;
-		}	
+		int counter = 0;
+		JSONArray weather =(JSONArray)obj.get("Weather Information:");
+		for(int i=0; i<weather.size();i++)
+		{
+			JSONObject TempAverage=(JSONObject)weather.get(i);
+			double tempAverage = (double) TempAverage.get("Temp");
+				temp+=tempAverage;
+		}
+		
+		
+		return temp/weather.size();	
 	}
 	
-					
-	public Double getVariance() {
-		
-		if(tmax==-Double.MAX_VALUE)
-			//TODO gestione errore
-		else{
-			Double average = this.getAverage();
-			Double temp = 0.0;
-			
-			for (Double value : values) {
-				temp += Math.pow((value-average), 2);
-			}
-			return temp/this.num;
-		}
-	}
 }
