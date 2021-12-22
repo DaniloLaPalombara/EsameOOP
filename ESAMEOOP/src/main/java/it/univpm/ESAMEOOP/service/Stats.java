@@ -83,7 +83,7 @@ public class Stats {
 		}
 		
 		
-		return temp/weather.size();	
+		return Math.round((temp/weather.size()*100)/100);	
 	}
 	
 }

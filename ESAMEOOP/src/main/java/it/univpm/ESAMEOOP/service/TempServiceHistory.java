@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
@@ -33,11 +34,11 @@ public class TempServiceHistory implements TempInterface {
 	private long stop;
 	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
 	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
+
 	
 	public String getType() {
 		return type;
 	}
-
 
 	public void setType(String type) {
 		this.type = type;
@@ -104,27 +105,35 @@ public class TempServiceHistory implements TempInterface {
 	@Override
 	public City setDataWeather(JSONObject fullInformation)
 	{
-		DataTemp data = new DataTemp();
+		//DataTemp data = new DataTemp();
 		City city=new City();
 		JSONObject info=(JSONObject)fullInformation;
 		city.setId((long)info.get("city_id"));
 		
 		JSONArray list = (JSONArray)info.get("list");
 		Vector <DataTemp> forecast = new Vector<>();
+		
 		for(int i = 0; i < list.size();i++)
 		{
-		    JSONObject List = (JSONObject)list.get(i);
 			
+			
+			JSONObject List = (JSONObject)list.get(i);
+			DataTemp data = new DataTemp();
 		    data.setDate_UNIX((long)List.get("dt"));
 			JSONObject main = (JSONObject)List.get("main");
 			data.setFeels_like((double)main.get("feels_like"));
 			data.setTemp((double)main.get("temp"));
 			data.setTemp_MIN((double)main.get("temp_min"));
 			data.setTemp_MAX((double)main.get("temp_max"));
-			
 			forecast.add(data);
+
+			
+
+			
 			List.clear();
+			
 		}
+
 		city.setDataTemp(forecast);
 		return city;
 	}
@@ -153,6 +162,17 @@ public class TempServiceHistory implements TempInterface {
 		obj.put("Weather Information:", weather);
 		
 		return obj;
+	}
+	
+	public JSONObject statist(JSONObject obj)
+	{
+		Stats Stats=new Stats();
+		JSONObject stats = new JSONObject(); 
+		stats.put("Temp_MAX",  Stats.getTempMax(obj));
+		stats.put("Temp_MIN",Stats.getTempMin(obj));
+		stats.put("Average", Stats.getAverage(obj));
+		return stats;
+		
 	}
 
 }
