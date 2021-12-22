@@ -13,7 +13,8 @@ public class StatsFeelsLike implements StatsInterface {
 	private double tmin;
 	private double temp;
 	private Integer num;
-	private Vector<Double> values;
+	private double average;
+	private double variance;
 	JSONObject obj =new JSONObject();
 	
 	@Override
@@ -63,13 +64,22 @@ public class StatsFeelsLike implements StatsInterface {
 				temp+=tempAverage;
 		}
 		
-		return Math.round((temp/weather.size()*100)/100);	
+		return average = Math.round((temp/weather.size()*100)/100);
 	}
 
 	@Override
 	public double getVariance(JSONObject obj) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
+		
+		double sum = 0;
+		JSONArray weather = (JSONArray)obj.get("Weather Information:");
+		for(int i=0; i<weather.size();i++) {
+			
+			JSONObject TempVariance =(JSONObject)weather.get(i);
+			double tempVariance = (double) TempVariance.get("Temp");
+			
+			sum += Math.pow((tempVariance-average), 2);
+		}		
+			
+		return variance = sum/(weather.size()-1);	
+	}	
 }

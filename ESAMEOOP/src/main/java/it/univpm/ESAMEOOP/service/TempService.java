@@ -2,16 +2,13 @@ package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-//import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
 
-//import org.json.*;
 import org.json.simple.*;
 import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Primary;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
-
 
 /**
  * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
@@ -48,7 +44,6 @@ public class TempService implements TempInterface {
 		@Override
 		public JSONObject getDataWeather(long id)
 		{
-			
 			JSONObject fullInformation=new JSONObject();
 			
 			try {
@@ -76,7 +71,7 @@ public class TempService implements TempInterface {
 					e.printStackTrace();
 			    }
 			
-				return fullInformation;			
+			return fullInformation;			
 		}	
 		
 		/**
@@ -102,7 +97,6 @@ public class TempService implements TempInterface {
 
 			JSONObject list = (JSONObject)cityData.get("main");
 			Vector <DataTemp> forecast=new Vector<DataTemp>();
-			
 			data.setFeels_like((double)list.get("feels_like"));
 			data.setTemp((double)list.get("temp"));
 			data.setTemp_MIN((double)list.get("temp_min"));
@@ -124,7 +118,7 @@ public class TempService implements TempInterface {
 
 		/**
 		 * metodo che prende i dati di interesse e li utilizza per creare il 
-		 * JSONObject che rescituirà la chiamata
+		 * JSONObject che rescituirà la chiamata tramite controller
 		 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 		 * un metodo che deriva da una superclasse o da un'interfaccia
 		 */
@@ -158,7 +152,5 @@ public class TempService implements TempInterface {
 			obj.put("Weather Information:", weather);
 			
 			return obj;		
-		}	
-		
-		
+		}		
 }
