@@ -1,10 +1,14 @@
 package it.univpm.ESAMEOOP.service;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.springframework.stereotype.Component;
 
-@Component
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+@Service
 public class StatsTemp implements StatsInterface {
 	
 	private double tmax;
@@ -15,10 +19,46 @@ public class StatsTemp implements StatsInterface {
 	private double variance;
 	JSONObject obj =new JSONObject();
 	
-	@Override
-	public double getTempMax(JSONObject obj) {
+	public JSONArray Parse(String route) {
 		
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
+		JSONParser parser = new JSONParser();
+		JSONArray obj = new JSONArray();
+		try {
+			obj = (JSONArray) parser.parse(route);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		JSONArray data = (JSONArray) obj;
+		
+		return data;
+	}
+	
+	@Override
+	public double getTempMax(String route) {
+		
+		JSONArray obj = (JSONArray) Parse(route);
+		
+		while(obj!=null) {
+		
+		for(int i=0;i<obj.size();i++) {
+			
+			JSONObject mario = (JSONObject) obj.get(i);
+		
+			while(mario != null) {
+	
+			double tempMax = (double) mario.get("Temp_MAX");
+			if(tempMax>tmax) {
+				tmax=tempMax;
+			}
+			}	
+		}
+			
+		}
+		
+		/*JSONArray weather =(JSONArray)obj.get("Weather Information:");
 		for(int i=0; i<weather.size();i++) {
 			
 			JSONObject TempMax=(JSONObject)weather.get(i);
@@ -26,7 +66,7 @@ public class StatsTemp implements StatsInterface {
 			if(tempMax >tmax) {
 				tmax=tempMax;
 			}
-		}
+		}*/
 		
 		return tmax;		
 	}

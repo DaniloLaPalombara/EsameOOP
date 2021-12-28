@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.univpm.ESAMEOOP.model.City;
+import it.univpm.ESAMEOOP.service.StatsTemp;
 import it.univpm.ESAMEOOP.service.TempService;
 import it.univpm.ESAMEOOP.service.TempServiceHistory;
 
@@ -19,16 +20,29 @@ public class TempController {
 	TempService openweatherservice;
 	@Autowired
 	TempServiceHistory openweatherservicehistory;
+	@Autowired
+	StatsTemp stats;
 	
+	
+	@RequestMapping(value = "/provaSave")
+	public String hourlySaving(@RequestParam(name="id",defaultValue="3183087")Integer id) {
+		openweatherservice.HourlySaving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), id);
+		return("Salvataggio iniziato");
+	}
 
 	@RequestMapping(value ="/prova")
-	public ResponseEntity <Object> getString(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+	/*public ResponseEntity <Object> getString(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
 			,@RequestParam(name="end",defaultValue="1628796785")Integer stop)
 	{
 		openweatherservicehistory.setStart(start);
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
-		return new ResponseEntity<>(openweatherservicehistory.Statits((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);
+		return new ResponseEntity<>(openweatherservicehistory.Statits((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);*/
+	
+	public Double getTemp(@RequestParam(name="id",defaultValue="3183087") Integer id)
+	{
+		String route = openweatherservice.HourlySaving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), id);
+		return stats.getTempMax(route);
 	}
 	
 	@RequestMapping(value = "/default1")

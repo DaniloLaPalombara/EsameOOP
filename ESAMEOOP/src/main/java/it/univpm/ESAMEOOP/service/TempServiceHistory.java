@@ -180,12 +180,12 @@ public class TempServiceHistory implements TempInterface {
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
-	public JSONObject Statits(JSONObject obj) {
+	/*public JSONObject Statits(JSONObject obj) {
 		
 		StatsTemp StatsT = new StatsTemp();
 		JSONObject statsT = new JSONObject(); 
 		
-		statsT.put("Temp_MAX",  StatsT.getTempMax(obj));
+		statsT.put("Temp_MAX", StatsT.getTempMax(obj));
 		statsT.put("Temp_MIN",StatsT.getTempMin(obj));
 		statsT.put("Average", StatsT.getAverage(obj));
 		statsT.put("Variance", StatsT.getVariance(obj));
@@ -205,7 +205,7 @@ public class TempServiceHistory implements TempInterface {
 		return sts;
 	}
 	
-	public void saveFile(JSONObject obj)
+	/*public void saveFile(JSONObject obj)
 	{
 	try {
 		 File dbOrig = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt");
@@ -220,7 +220,7 @@ public class TempServiceHistory implements TempInterface {
 	     while ((len = in.read(buf)) > 0) {
 	        out.write(buf, 0, len);
 	     }
-	     in.close();*/
+	     in.close();
 		BufferedWriter writer = new BufferedWriter(new FileWriter
 			    (dbCopy));//"C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt"));
 		JSONArray weather = (JSONArray)obj.get("Weather Information:");
@@ -250,5 +250,5 @@ public class TempServiceHistory implements TempInterface {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-}
+}*/
 }
