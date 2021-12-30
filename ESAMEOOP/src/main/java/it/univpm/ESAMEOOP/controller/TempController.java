@@ -1,5 +1,8 @@
 package it.univpm.ESAMEOOP.controller;
 
+import java.util.Vector;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.service.StatsTemp;
 import it.univpm.ESAMEOOP.service.TempService;
 import it.univpm.ESAMEOOP.service.TempServiceHistory;
+
 
 
 @RestController
@@ -39,10 +43,10 @@ public class TempController {
 		openweatherservicehistory.setType(type);
 		return new ResponseEntity<>(openweatherservicehistory.Statits((openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(3183087))))),HttpStatus.OK);*/
 	
-	public Double getTemp(@RequestParam(name="id",defaultValue="3183087") Integer id)
+	public ResponseEntity<Object> getTemp(@RequestParam(name="id",defaultValue="3183087") Integer id)
 	{
-		String route = openweatherservice.HourlySaving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), id);
-		return stats.getTempMax(route);
+		//Vector data = openweatherservice.HourlySaving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), id);
+		return new ResponseEntity<> (openweatherservice.Statits(openweatherservice.getRoute()), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/default1")

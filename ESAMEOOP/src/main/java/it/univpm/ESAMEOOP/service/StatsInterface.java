@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 public interface StatsInterface {
 	
 	public abstract double getTempMax (String route);
-	public abstract double getTempMin (JSONObject obj);
-	public abstract double getAverage (JSONObject obj);
-	public abstract double getVariance (JSONObject obj);
+	public abstract double getTempMin (String route);
+	public abstract double getAverage (String route);
+	public abstract double getVariance (String route);
 }

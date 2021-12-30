@@ -40,6 +40,12 @@ public class TempService implements TempInterface {
 		private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 		private String URLCurrent="http://api.openweathermap.org/data/2.5/weather?id=";
 		Vector <DataTemp> forecast=new Vector<DataTemp>();
+		String route = System.getProperty("user.dir") + "/src/main/resources/" + "Ciao";
+
+		
+		public String getRoute() {
+			return route;
+		}
 
 		/**
 		 * metodo che serve per mettersi in collegamento con l'API e di utilizzare
@@ -208,84 +214,109 @@ public class TempService implements TempInterface {
 		}
 	}*/
 	
-	public String HourlySaving(JSONObject obj, long id) {
+	public Vector HourlySaving(JSONObject obj, long id) {
 		
-		//JSONObject obj2 = obj;
 		
-		String route = System.getProperty("user.dir") + "/src/main/resources/" + id;
 		File file = new File(route);
+		FileWriter fileW;
+		Vector forecast = new Vector();
+		
+		try {
+			fileW = new FileWriter(file, true);
+			BufferedWriter buffered = new BufferedWriter(fileW);
+			buffered.write("[ \n");
+			buffered.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
+		
+		Timer timer = new Timer();
 		
 		TimerTask timerT = new TimerTask() {
 			
 			public void run() {
 				
 				try {
-					
-					JSONObject obj2 = obj;
-				JSONArray temp = (JSONArray) obj2.get("Weather Information");
 				
+					
+				JSONArray temp = (JSONArray) obj.get("Weather Information");
+				
+				for (int i = 0; i<temp.size();i++)
+				{
+				        
+				     JSONObject Temp = (JSONObject)temp.get(i);
+				     DataTemp data= new DataTemp();
+				      data.setTemp((double) Temp.get("Temp"));
+					    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
+					    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+					    data.setFeels_like((double) Temp.get("Feels_like"));
+					    forecast.add(data);
+				}
+					    
 				FileWriter fileW = new FileWriter(file, true);
-				BufferedWriter buffered = new BufferedWriter(fileW);
-				buffered.write(temp.toJSONString());
-				buffered.write("\n");
+				BufferedWriter buffered2 = new BufferedWriter(fileW);
+				buffered2.write(temp.toJSONString());
+				buffered2.write("\n");
+				buffered2.close();
 				
-				/*for(int i=0; i<temp.size();i++) {
-					
-				JSONObject obj1 = (JSONObject) temp.get(i);
-					
-				//Temp = (double) obj1.get("Temp");
-				//FeelsL = (double) obj1.get("Feels_like");
-				
-				DataTemp data= new DataTemp();
-		        data.setTemp((double) obj1.get("Temp"));
-			    data.setTemp_MIN((double) obj1.get("Temp_MIN"));
-			    data.setTemp_MAX((double) obj1.get("Temp_MAX"));
-			    data.setFeels_like((double) obj1.get("Feels_like"));
-			    buffered.write("{\n");
-			    buffered.write("Temp: "+data.getTemp()+"\n");
-			    buffered.write("Temp_MIN: "+data.getTemp_MIN()+"\n");
-			    buffered.write("Temp_MAX: "+data.getTemp_MAX()+"\n");
-			    buffered.write("Feels_like: "+data.getFeels_like()+"\n");
-			    buffered.write("}\n");
-				}
-				//JSONArray weather = new JSONArray();
-				
-				/*for(DataTemp data:city.getDataTemp()) {
-					
-					JSONObject WeatherData = new JSONObject();
-					WeatherData.put("Date", data.getDate());
-					WeatherData.put("Feels_like", data.getFeels_like());
-					WeatherData.put("Temp", data.getTemp());
-					WeatherData.put("Temp_MAX", data.getTemp_MAX());
-					WeatherData.put("Temp_MIN", data.getTemp_MIN());
-					
-					weather.add(WeatherData);
-					
+				if(forecast.size()>10) {
+					timer.cancel();
+					try {
+						fileW = new FileWriter(file, true);
+						BufferedWriter buffered3 = new BufferedWriter(fileW);
+						buffered3.write("]");
+						buffered3.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
-				JSONObject obj = new JSONObject();     
-				obj.put("Weather Information:", weather);*/
-				
-				if(!file.exists()) {
-				file.createNewFile();
-			    }
-				
-//				FileWriter fileW = new FileWriter(file, true);
-				//BufferedWriter buffered = new BufferedWriter(fileW);
-				//buffered.write("Temp" + Temp);
-				//buffered.write("Feels_like" + FeelsL);
-				//buffered.write("/n");
-				buffered.close();
-				
-				} catch(IOException e) {
-					System.out.println(e);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+					
 			}
 		};	
 		
-		Timer timer = new Timer();
-		timer.schedule(timerT, 0, 60000);
+		timer.schedule(timerT, 0, 5000);
 		
-		return route;
+		
+		
+		return forecast;
+	}
+	
+	/**
+	 * metodo che prende i dati riguardanti le statistiche e li utilizza per
+	 * creare un JSONObject
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
+	public JSONObject Statits(String route) {
+		
+		StatsTemp StatsT = new StatsTemp();
+		JSONObject statsT = new JSONObject(); 
+		
+		statsT.put("Temp_MAX", StatsT.getTempMax(route));
+		statsT.put("Temp_MIN",StatsT.getTempMin(route));
+		statsT.put("Average", StatsT.getAverage(route));
+		statsT.put("Variance", StatsT.getVariance(route));
+		
+		/*StatsFeelsLike StatsFL = new StatsFeelsLike();
+		JSONObject statsFL = new JSONObject();
+		
+		statsFL.put("Temp_MAX",  StatsFL.getTempMax(obj));
+		statsFL.put("Temp_MIN",StatsFL.getTempMin(obj));
+		statsFL.put("Average", StatsFL.getAverage(obj));
+		statsFL.put("Variance", StatsFL.getVariance(obj));*/
+		
+		JSONObject sts = new JSONObject();
+	    sts.put("Temperature statistics", statsT);      
+		/*sts.put("Feels like statistics:", statsFL);*/
+		
+		return sts;
 	}
 }

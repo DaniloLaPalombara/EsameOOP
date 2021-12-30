@@ -1,5 +1,9 @@
 package it.univpm.ESAMEOOP.service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.json.simple.JSONArray;
 
 import org.json.simple.JSONObject;
@@ -24,9 +28,9 @@ public class StatsTemp implements StatsInterface {
 		JSONParser parser = new JSONParser();
 		JSONArray obj = new JSONArray();
 		try {
-			obj = (JSONArray) parser.parse(route);
+			obj = (JSONArray) parser.parse(new InputStreamReader(new FileInputStream(route)));
 			
-		} catch (ParseException e) {
+		} catch (ParseException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -41,80 +45,87 @@ public class StatsTemp implements StatsInterface {
 		
 		JSONArray obj = (JSONArray) Parse(route);
 		
-		while(obj!=null) {
-		
 		for(int i=0;i<obj.size();i++) {
 			
-			JSONObject mario = (JSONObject) obj.get(i);
+			JSONArray array = (JSONArray) obj.get(i);
 		
-			while(mario != null) {
-	
-			double tempMax = (double) mario.get("Temp_MAX");
-			if(tempMax>tmax) {
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				
+				double tempMax = (double) obj2.get("Temp_MAX");
+				if(tempMax>tmax) {
 				tmax=tempMax;
 			}
 			}	
 		}
-			
-		}
-		
-		/*JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++) {
-			
-			JSONObject TempMax=(JSONObject)weather.get(i);
-			double tempMax = (double) TempMax.get("Temp_MAX");
-			if(tempMax >tmax) {
-				tmax=tempMax;
-			}
-		}*/
 		
 		return tmax;		
 	}
 	
 	@Override
-	public double getTempMin(JSONObject obj) {
+	public double getTempMin(String route) {
 		
-		double tmin = 1000000;
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++) {
+		tmin = 100;
+        JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
 			
-			JSONObject TempMin=(JSONObject)weather.get(i);
-			double tempMin = (double) TempMin.get("Temp_MIN");
-			if(tempMin <tmin) {
+			JSONArray array = (JSONArray) obj.get(i);
+		
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				
+				double tempMin = (double) obj2.get("Temp_MIN");
+				if(tempMin<tmin) {
 				tmin=tempMin;
 			}
+			}	
 		}
 		
-		return tmin;	
+		return tmin;		
 	}	
 	
 	@Override
-	public double getAverage(JSONObject obj) {
+	public double getAverage(String route) {
 		
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++) {
+		 JSONArray obj = (JSONArray) Parse(route);
 			
-			JSONObject TempAverage=(JSONObject)weather.get(i);
-			double tempAverage = (double) TempAverage.get("Temp");
+			for(int i=0;i<obj.size();i++) {
+				
+				JSONArray array = (JSONArray) obj.get(i);
+			
+				for(int j=0;j<array.size();j++) {
+					
+					JSONObject obj2 = (JSONObject) array.get(j);
+			double tempAverage = (double) obj2.get("Temp");
 			temp+=tempAverage;
+				}
 		}
 		
-		return average = Math.round((temp/weather.size()*100)/100);	
+		return average = Math.round((temp/obj.size()*100)/100);	
 	}
 
 	@Override
-	public double getVariance(JSONObject obj) {
+	public double getVariance(String route) {
 		
 		double sum = 0;
-		JSONArray weather = (JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++) {
+		 JSONArray obj = (JSONArray) Parse(route);
 			
-			JSONObject TempVariance =(JSONObject)weather.get(i);
-			double tempVariance = (double) TempVariance.get("Temp");
+			for(int i=0;i<obj.size();i++) {
+				
+				JSONArray array = (JSONArray) obj.get(i);
+			
+				for(int j=0;j<array.size();j++) {
+					
+					JSONObject obj2 = (JSONObject) array.get(j);
+			double tempVariance = (double) obj2.get("Temp");
 			
 			sum += Math.pow((tempVariance-average), 2);
-		}		
+		}
+			}
 			
-		return variance =sum/(weather.size()-1);
+		return variance =sum/(obj.size()-1);
 	}	
 }	
