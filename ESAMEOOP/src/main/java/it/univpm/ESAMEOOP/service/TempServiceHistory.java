@@ -169,40 +169,9 @@ public class TempServiceHistory implements TempInterface {
 		
 		JSONObject obj = new JSONObject();
 	    obj.put("City Information", out);      
-		obj.put("Weather Information:", weather);
+		obj.put("Temp Information:", weather);
 		
 		return obj;
-	}
-	
-	/**
-	 * metodo che prende i dati riguardanti le statistiche e li utilizza per
-	 * creare un JSONObject
-	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
-	 */
-	/*public JSONObject Statits(JSONObject obj) {
-		
-		StatsTemp StatsT = new StatsTemp();
-		JSONObject statsT = new JSONObject(); 
-		
-		statsT.put("Temp_MAX", StatsT.getTempMax(obj));
-		statsT.put("Temp_MIN",StatsT.getTempMin(obj));
-		statsT.put("Average", StatsT.getAverage(obj));
-		statsT.put("Variance", StatsT.getVariance(obj));
-		
-		StatsFeelsLike StatsFL = new StatsFeelsLike();
-		JSONObject statsFL = new JSONObject();
-		
-		statsFL.put("Temp_MAX",  StatsFL.getTempMax(obj));
-		statsFL.put("Temp_MIN",StatsFL.getTempMin(obj));
-		statsFL.put("Average", StatsFL.getAverage(obj));
-		statsFL.put("Variance", StatsFL.getVariance(obj));
-		
-		JSONObject sts = new JSONObject();
-	    sts.put("Temperature statistics", statsT);      
-		sts.put("Feels like statistics:", statsFL);
-		
-		return sts;
 	}
 	
 	/*public void saveFile(JSONObject obj)

@@ -48,7 +48,7 @@ public class TempService implements TempInterface {
 		}
 
 		/**
-		 * metodo che serve per mettersi in collegamento con l'API e di utilizzare
+		 * Metodo che serve per mettersi in collegamento con l'API e di utilizzare
 		 * i dati messi a disposizione
 		 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 		 * un metodo che deriva da una superclasse o da un'interfaccia
@@ -87,7 +87,7 @@ public class TempService implements TempInterface {
 		}	
 		
 		/**
-		 * metodo che prende dai dati forniti dall'API sono quelli di interesse
+		 * Metodo che prende dai dati forniti dall'API sono quelli di interesse
 		 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 		 * un metodo che deriva da una superclasse o da un'interfaccia
 		 */
@@ -129,7 +129,7 @@ public class TempService implements TempInterface {
 		}
 
 		/**
-		 * metodo che prende i dati di interesse e li utilizza per creare il 
+		 * Metodo che prende i dati di interesse e li utilizza per creare il 
 		 * JSONObject che restituirà la chiamata tramite controller
 		 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 		 * un metodo che deriva da una superclasse o da un'interfaccia
@@ -154,148 +154,97 @@ public class TempService implements TempInterface {
 				WeatherData.put("Temp", data.getTemp());
 				WeatherData.put("Temp_MAX", data.getTemp_MAX());
 				WeatherData.put("Temp_MIN", data.getTemp_MIN());
-				WeatherData.put("Weather:", data.getWeather());
-				WeatherData.put("Descriprion:", data.getWeather_description());
+				//WeatherData.put("Weather:", data.getWeather());
+				//WeatherData.put("Descriprion:", data.getWeather_description());
 				
 				weather.add(WeatherData);
 				
 			}
 			JSONObject obj = new JSONObject();
 		    obj.put("City Information", out);      
-			obj.put("Weather Information", weather);
+			obj.put("Temp Information", weather);
 			
 			return obj;		
 		}
 		
-		/*public void saveFile(JSONObject obj)
-		{
-		try {
-			 File dbOrig = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt");
-		     File dbCopy = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.json");
-		     Files.copy( dbOrig.toPath(), dbCopy.toPath() );
-		     
-		     
-		   //  /*InputStream in = new FileInputStream(dbOrig);
-		     OutputStream out = new FileOutputStream(dbCopy);
-		     byte[] buf = new byte[1024];
-		     int len;
-		     while ((len = in.read(buf)) > 0) {
-		        out.write(buf, 0, len);
-		     }
-		     in.close(); QUA VA RIMESSO IL COMMENTO 
-			BufferedWriter writer = new BufferedWriter(new FileWriter
-				    (dbCopy));//"C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt"));
-			JSONArray weather = (JSONArray)obj.get("Weather Information:");
-			for (int i = 0; i<weather.size();i++)
-			{
-			        
-			        JSONObject Temp = (JSONObject)weather.get(i);
-					DataTemp data= new DataTemp();
-			        data.setTemp((double) Temp.get("Temp"));
-				    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-				    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-				    data.setFeels_like((double) Temp.get("Feels_like"));
-				    writer.write("Temp: "+data.getTemp()+"\n");
-				    writer.write("Temp_MIN: "+data.getTemp_MIN()+"\n");
-				    writer.write("Temp_MAX: "+data.getTemp_MAX()+"\n");
-				    writer.write("Feels_like: "+data.getFeels_like()+"\n");
-				    
-				  //  out.close();
-			   
-
-
-			}
-			writer.close();
-
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-	
-	public Vector HourlySaving(JSONObject obj, long id) {
+		/**
+		 * Metodo che permette di salvare ogni ora i dati relativi alle
+		 * temperature di una città
+		 * @param obj Il JSONObject contenente le informazioni sulle temperature
+		 * @param id L'indirizzo relativa ad una città
+		 * @return vettore contenente gli elementi utili per il calcolo delle statistiche
+		 */
 		
-		
-		File file = new File(route);
-		FileWriter fileW;
-		Vector forecast = new Vector();
-		
-		try {
-			fileW = new FileWriter(file, true);
-			BufferedWriter buffered = new BufferedWriter(fileW);
-			buffered.write("[ \n");
-			buffered.close();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	
-		
-		Timer timer = new Timer();
-		
-		TimerTask timerT = new TimerTask() {
-			
-			public void run() {
-				
-				try {
-				
-					
-				JSONArray temp = (JSONArray) obj.get("Weather Information");
-				
-				for (int i = 0; i<temp.size();i++)
-				{
-				        
-				     JSONObject Temp = (JSONObject)temp.get(i);
-				     DataTemp data= new DataTemp();
-				      data.setTemp((double) Temp.get("Temp"));
-					    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-					    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-					    data.setFeels_like((double) Temp.get("Feels_like"));
-					    forecast.add(data);
-				}
-					    
-				FileWriter fileW = new FileWriter(file, true);
-				BufferedWriter buffered2 = new BufferedWriter(fileW);
-				buffered2.write(temp.toJSONString());
-				buffered2.write("\n");
-				buffered2.close();
-				
-				if(forecast.size()>10) {
-					timer.cancel();
-					try {
-						fileW = new FileWriter(file, true);
-						BufferedWriter buffered3 = new BufferedWriter(fileW);
-						buffered3.write("]");
-						buffered3.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-					
-			}
-		};	
-		
-		timer.schedule(timerT, 0, 5000);
-		
-		
-		
-		return forecast;
-	}
+	    public Vector HourlySaving(JSONObject obj, long id) {
+	    	
+	    	File file = new File(route);
+	    	FileWriter fileW;
+	    	Vector forecast = new Vector();
+	    	
+	    	try {
+	    		fileW = new FileWriter(file, true);
+	    		BufferedWriter buffered = new BufferedWriter(fileW);
+	    		buffered.write("[ \n");
+	    		buffered.close();
+	    		} catch (IOException e1) {
+	    			e1.printStackTrace();	
+	    		}
+	    	
+	    	Timer timer = new Timer();
+	    	TimerTask timerT = new TimerTask() {
+	    		
+	    		public void run() {
+	    			
+	    			try {
+	    				JSONArray temp = (JSONArray) obj.get("Temp Information");
+	    				
+	    				for (int i = 0; i<temp.size();i++) {
+	    					
+	    					JSONObject Temp = (JSONObject)temp.get(i);
+	    					DataTemp data= new DataTemp();
+	    					data.setTemp((double) Temp.get("Temp"));
+	    					data.setTemp_MIN((double) Temp.get("Temp_MIN"));
+	    					data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+	    					data.setFeels_like((double) Temp.get("Feels_like"));
+	    					forecast.add(data);
+	    				}
+	    				
+	    				FileWriter fileW = new FileWriter(file, true);
+	    				BufferedWriter buffered2 = new BufferedWriter(fileW);
+	    				buffered2.write(temp.toJSONString());
+	    				buffered2.write("\n");
+	    				buffered2.close();
+	    				
+	    				if(forecast.size()>=10) {
+	    					timer.cancel();
+	    					
+	    					try {
+	    						fileW = new FileWriter(file, true);
+	    						BufferedWriter buffered3 = new BufferedWriter(fileW);
+	    						buffered3.write("]");
+	    						buffered3.close();
+	    						
+	    					} catch (IOException e) {
+	    						e.printStackTrace();
+	    					}
+	    				}
+	    				
+	    			} catch (IOException e) {
+	    				e.printStackTrace();	
+	    			}	
+	    		}	
+	    	};
+	    	
+	    	timer.schedule(timerT, 0, 5000);
+	    	return forecast;
+	    	
+	    }
 	
 	/**
-	 * metodo che prende i dati riguardanti le statistiche e li utilizza per
-	 * creare un JSONObject
-	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 * Metodo che prende i dati riguardanti le statistiche sulle temperature 
+	 * correnti e percepite e li utilizza per creare un JSONObject
 	 */
-	public JSONObject Statits(String route) {
+	public JSONObject Statistics(String route) {
 		
 		StatsTemp StatsT = new StatsTemp();
 		JSONObject statsT = new JSONObject(); 
@@ -305,17 +254,17 @@ public class TempService implements TempInterface {
 		statsT.put("Average", StatsT.getAverage(route));
 		statsT.put("Variance", StatsT.getVariance(route));
 		
-		/*StatsFeelsLike StatsFL = new StatsFeelsLike();
+		StatsFeelsLike StatsFL = new StatsFeelsLike();
 		JSONObject statsFL = new JSONObject();
 		
-		statsFL.put("Temp_MAX",  StatsFL.getTempMax(obj));
-		statsFL.put("Temp_MIN",StatsFL.getTempMin(obj));
-		statsFL.put("Average", StatsFL.getAverage(obj));
-		statsFL.put("Variance", StatsFL.getVariance(obj));*/
+		statsFL.put("Temp_MAX",  StatsFL.getTempMax(route));
+		statsFL.put("Temp_MIN",StatsFL.getTempMin(route));
+		statsFL.put("Average", StatsFL.getAverage(route));
+		statsFL.put("Variance", StatsFL.getVariance(route));
 		
 		JSONObject sts = new JSONObject();
 	    sts.put("Temperature statistics", statsT);      
-		/*sts.put("Feels like statistics:", statsFL);*/
+		sts.put("Feels like statistics:", statsFL);
 		
 		return sts;
 	}

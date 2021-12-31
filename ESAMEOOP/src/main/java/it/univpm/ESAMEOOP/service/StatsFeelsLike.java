@@ -1,12 +1,24 @@
 package it.univpm.ESAMEOOP.service;
 
-import java.util.Vector;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Component;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
 
-@Component
+/**
+ * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
+ * per il calcolo dei valori riguardanti le statistiche sulle temperature percepite
+ * @Service è un'annotazione che serve per contrassegnare la classe fornitore 
+ * di servizi
+ * @author daniloLaPalombara&nicolòIanni
+ *
+ */
+@Service
 public class StatsFeelsLike implements StatsInterface {
 	
 	private double tmax;
@@ -15,71 +27,133 @@ public class StatsFeelsLike implements StatsInterface {
 	private Integer num;
 	private double average;
 	private double variance;
-	JSONObject obj =new JSONObject();
+	JSONObject obj = new JSONObject();
 	
-	@Override
-	public double getTempMax(JSONObject obj) {
+	
+	public JSONArray Parse(String route) {
 		
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++)
-		{
-			JSONObject TempMax=(JSONObject)weather.get(i);
-			double tempMax = (double) TempMax.get("Feels_like");
-			if(tempMax >tmax)
-			{
-				tmax=tempMax;
-			}
+		JSONParser parser = new JSONParser();
+		JSONArray obj = new JSONArray();
+		try {
+			obj = (JSONArray) parser.parse(new InputStreamReader(new FileInputStream(route)));
+			
+		} catch (ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		JSONArray data = (JSONArray) obj;
+		
+		return data;
+	}
+	
+	/**
+	 * Metodo che calcola la temperatura massima percepita di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
+	@Override
+	public double getTempMax(String route) {
+		
+		JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
+			
+			JSONArray array = (JSONArray) obj.get(i);
+		
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				
+				double tempMax = (double) obj2.get("Feels_like");
+				
+				if(tempMax>tmax) {
+				tmax = tempMax;
+				}
+			}	
 		}
 		
 		return tmax;		
 	}
 	
+	/**
+	 * Metodo che calcola la temperatura minima percepita di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
-	public double getTempMin(JSONObject obj) {
+	public double getTempMin(String route) {
 		
-		double tmin = 1000000;
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++)
-		{
-			JSONObject TempMin=(JSONObject)weather.get(i);
-			double tempMin = (double) TempMin.get("Feels_like");
-			if(tempMin <tmin)
-			{
+		tmin = 100;
+        JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
+			
+			JSONArray array = (JSONArray) obj.get(i);
+		
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				
+				double tempMin = (double) obj2.get("Feels_like");
+				
+				if(tempMin<tmin) {
 				tmin=tempMin;
-			}
+				}
+			}	
 		}
 		
-		return tmin;	
+		return tmin;		
 	}	
 	
+	/**
+	 * Metodo che calcola la temperatura media percepita di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
-	public double getAverage(JSONObject obj) {
+	public double getAverage(String route) {
 		
-		int counter = 0;
-		JSONArray weather =(JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++)
-		{
-			JSONObject TempAverage=(JSONObject)weather.get(i);
-			double tempAverage = (double) TempAverage.get("Feels_like");
-				temp+=tempAverage;
+		JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
+			
+			JSONArray array = (JSONArray) obj.get(i);
+			
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				double tempAverage = (double) obj2.get("Temp");
+				temp+=tempAverage;	
+			}	
 		}
 		
-		return average = Math.round((temp/weather.size()*100)/100);
+		return average = Math.round((temp/obj.size()*100)/100);
 	}
 
+	/**
+	 * Metodo che calcola la varianza della temperatura percepita di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
-	public double getVariance(JSONObject obj) {
+	public double getVariance(String route) {
 		
 		double sum = 0;
-		JSONArray weather = (JSONArray)obj.get("Weather Information:");
-		for(int i=0; i<weather.size();i++) {
+		JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
 			
-			JSONObject TempVariance =(JSONObject)weather.get(i);
-			double tempVariance = (double) TempVariance.get("Temp");
+			JSONArray array = (JSONArray) obj.get(i);
 			
-			sum += Math.pow((tempVariance-average), 2);
-		}		
+			for(int j=0;j<array.size();j++) {
+				
+				JSONObject obj2 = (JSONObject) array.get(j);
+				double tempVariance = (double) obj2.get("Feels_like");
+				sum += Math.pow((tempVariance-average), 2);	
+			}
+		}
 			
-		return variance = sum/(weather.size()-1);	
+		return variance = sum/(obj.size()-1);
 	}	
 }

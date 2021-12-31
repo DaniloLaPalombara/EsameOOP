@@ -37,7 +37,7 @@ public class City {
 	 */
 	private double lon;
 	/**
-	 * vettore che contiene gli elementi considerati
+	 * vettore che contiene gli elementi riguaradanti le temperature
 	 */
 	private Vector<DataTemp> DataTemp = new Vector<>();
 	

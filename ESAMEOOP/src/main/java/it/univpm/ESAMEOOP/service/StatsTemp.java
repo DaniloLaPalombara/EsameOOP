@@ -9,9 +9,16 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+/**
+ * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
+ * per il calcolo dei valori riguardanti le statistiche sulle temperature correnti
+ * @Service è un'annotazione che serve per contrassegnare la classe fornitore 
+ * di servizi
+ * @author daniloLaPalombara&nicolòIanni
+ *
+ */
 @Service
 public class StatsTemp implements StatsInterface {
 	
@@ -21,7 +28,7 @@ public class StatsTemp implements StatsInterface {
 	private Integer num;
 	private double average;
 	private double variance;
-	JSONObject obj =new JSONObject();
+	JSONObject obj = new JSONObject();
 	
 	public JSONArray Parse(String route) {
 		
@@ -40,6 +47,11 @@ public class StatsTemp implements StatsInterface {
 		return data;
 	}
 	
+	/**
+	 * Metodo che calcola la temperatura massima corrente di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
 	public double getTempMax(String route) {
 		
@@ -54,15 +66,21 @@ public class StatsTemp implements StatsInterface {
 				JSONObject obj2 = (JSONObject) array.get(j);
 				
 				double tempMax = (double) obj2.get("Temp_MAX");
+				
 				if(tempMax>tmax) {
-				tmax=tempMax;
-			}
+				tmax = tempMax;
+				}
 			}	
 		}
 		
 		return tmax;		
 	}
 	
+	/**
+	 * Metodo che calcola la temperatura minima corrente di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
 	public double getTempMin(String route) {
 		
@@ -78,54 +96,64 @@ public class StatsTemp implements StatsInterface {
 				JSONObject obj2 = (JSONObject) array.get(j);
 				
 				double tempMin = (double) obj2.get("Temp_MIN");
+				
 				if(tempMin<tmin) {
 				tmin=tempMin;
-			}
+				}
 			}	
 		}
 		
 		return tmin;		
 	}	
 	
+	/**
+	 * Metodo che calcola la temperatura media corrente di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
 	public double getAverage(String route) {
 		
 		 JSONArray obj = (JSONArray) Parse(route);
-			
-			for(int i=0;i<obj.size();i++) {
-				
-				JSONArray array = (JSONArray) obj.get(i);
-			
-				for(int j=0;j<array.size();j++) {
-					
-					JSONObject obj2 = (JSONObject) array.get(j);
-			double tempAverage = (double) obj2.get("Temp");
-			temp+=tempAverage;
-				}
+		 
+		 for(int i=0;i<obj.size();i++) {
+			 
+			 JSONArray array = (JSONArray) obj.get(i);
+			 
+			 for(int j=0;j<array.size();j++) {
+				 
+				 JSONObject obj2 = (JSONObject) array.get(j);
+				 double tempAverage = (double) obj2.get("Temp");
+				 temp+=tempAverage;
+			}
 		}
 		
 		return average = Math.round((temp/obj.size()*100)/100);	
 	}
 
+	/**
+	 * Metodo che calcola la varianza della temperatura corrente di una città
+	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
+	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 */
 	@Override
 	public double getVariance(String route) {
 		
 		double sum = 0;
-		 JSONArray obj = (JSONArray) Parse(route);
+		JSONArray obj = (JSONArray) Parse(route);
+		
+		for(int i=0;i<obj.size();i++) {
 			
-			for(int i=0;i<obj.size();i++) {
+			JSONArray array = (JSONArray) obj.get(i);
+			
+			for(int j=0;j<array.size();j++) {
 				
-				JSONArray array = (JSONArray) obj.get(i);
-			
-				for(int j=0;j<array.size();j++) {
-					
-					JSONObject obj2 = (JSONObject) array.get(j);
-			double tempVariance = (double) obj2.get("Temp");
-			
-			sum += Math.pow((tempVariance-average), 2);
-		}
+				JSONObject obj2 = (JSONObject) array.get(j);
+				double tempVariance = (double) obj2.get("Temp");
+				sum += Math.pow((tempVariance-average), 2);	
 			}
+		}
 			
-		return variance =sum/(obj.size()-1);
+		return variance = sum/(obj.size()-1);
 	}	
 }	
