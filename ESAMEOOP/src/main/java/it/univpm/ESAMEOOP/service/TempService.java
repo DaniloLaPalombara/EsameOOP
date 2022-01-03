@@ -40,11 +40,12 @@ public class TempService implements TempInterface {
 		private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 		private String URLCurrent="http://api.openweathermap.org/data/2.5/weather?id=";
 		Vector <DataTemp> forecast=new Vector<DataTemp>();
-		String route = System.getProperty("user.dir") + "/src/main/resources/" + "Ciao";
+    	int counter=0;
+    	
 
-		
-		public String getRoute() {
-			return route;
+
+		public int getCounter() {
+			return counter;
 		}
 
 		/**
@@ -175,11 +176,12 @@ public class TempService implements TempInterface {
 		 * @return vettore contenente gli elementi utili per il calcolo delle statistiche
 		 */
 		
-	    public Vector HourlySaving(JSONObject obj, long id) {
+	    public void Saving(JSONObject obj,int call,int interval,String route) {
 	    	
 	    	File file = new File(route);
 	    	FileWriter fileW;
-	    	Vector forecast = new Vector();
+	    	//Vector forecast = new Vector();
+
 	    	
 	    	try {
 	    		fileW = new FileWriter(file, true);
@@ -200,13 +202,14 @@ public class TempService implements TempInterface {
 	    				
 	    				for (int i = 0; i<temp.size();i++) {
 	    					
-	    					JSONObject Temp = (JSONObject)temp.get(i);
-	    					DataTemp data= new DataTemp();
-	    					data.setTemp((double) Temp.get("Temp"));
-	    					data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-	    					data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-	    					data.setFeels_like((double) Temp.get("Feels_like"));
-	    					forecast.add(data);
+	    					//JSONObject Temp = (JSONObject)temp.get(i);
+	    					//DataTemp data= new DataTemp();
+	    					//data.setTemp((double) Temp.get("Temp"));
+	    					//data.setTemp_MIN((double) Temp.get("Temp_MIN"));
+	    					//data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+	    					//data.setFeels_like((double) Temp.get("Feels_like"));
+	    					//forecast.add(data);
+	    					counter++;
 	    				}
 	    				
 	    				FileWriter fileW = new FileWriter(file, true);
@@ -215,7 +218,7 @@ public class TempService implements TempInterface {
 	    				buffered2.write("\n");
 	    				buffered2.close();
 	    				
-	    				if(forecast.size()>=10) {
+	    				if(counter>=call) {
 	    					timer.cancel();
 	    					
 	    					try {
@@ -235,8 +238,7 @@ public class TempService implements TempInterface {
 	    		}	
 	    	};
 	    	
-	    	timer.schedule(timerT, 0, 5000);
-	    	return forecast;
+	    	timer.schedule(timerT, 0, interval);
 	    	
 	    }
 	

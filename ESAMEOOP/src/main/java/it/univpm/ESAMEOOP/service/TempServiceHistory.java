@@ -38,8 +38,15 @@ public class TempServiceHistory implements TempInterface {
 	private long stop;
 	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
 	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
+	protected String route = System.getProperty("user.dir") + "/src/main/resources/" + "HourlyStatistics";
+	
+	
 
 	
+	public String getRoute() {
+		return route;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -157,12 +164,13 @@ public class TempServiceHistory implements TempInterface {
 		JSONArray weather = new JSONArray();
 		for(DataTemp data:city.getDataTemp()) {
 			
+			JSONArray array = new JSONArray();
 			JSONObject WeatherData = new JSONObject();
 			WeatherData.put("Date", data.getDate());
-			WeatherData.put("Feels_like", data.getFeels_like());
-			WeatherData.put("Temp", data.getTemp());
-			WeatherData.put("Temp_MAX", data.getTemp_MAX());
-			WeatherData.put("Temp_MIN", data.getTemp_MIN());
+			WeatherData.put("Feels_like", Math.round((data.getFeels_like()-273.15)*100)/100);
+			WeatherData.put("Temp", (data.getTemp()-273.15));
+			WeatherData.put("Temp_MAX", (data.getTemp_MAX()-273.15));
+			WeatherData.put("Temp_MIN", (data.getTemp_MIN()-273.15));
 			
 			weather.add(WeatherData);
 		}
@@ -174,25 +182,41 @@ public class TempServiceHistory implements TempInterface {
 		return obj;
 	}
 	
-	/*public void saveFile(JSONObject obj)
+	/**
+	 * Metodo che prende i dati riguardanti le statistiche sulle temperature 
+	 * correnti e percepite e li utilizza per creare un JSONObject
+	 */
+	public JSONObject Statistics(String route) {
+		
+		StatsTemp StatsT = new StatsTemp();
+		JSONObject statsT = new JSONObject(); 
+		
+		statsT.put("Temp_MAX", StatsT.getTempMax(route));
+		statsT.put("Temp_MIN",StatsT.getTempMin(route));
+		statsT.put("Average", StatsT.getAverage(route));
+		statsT.put("Variance", StatsT.getVariance(route));
+		
+		StatsFeelsLike StatsFL = new StatsFeelsLike();
+		JSONObject statsFL = new JSONObject();
+		
+		statsFL.put("Temp_MAX",  StatsFL.getTempMax(route));
+		statsFL.put("Temp_MIN",StatsFL.getTempMin(route));
+		statsFL.put("Average", StatsFL.getAverage(route));
+		statsFL.put("Variance", StatsFL.getVariance(route));
+		
+		JSONObject sts = new JSONObject();
+	    sts.put("Temperature statistics", statsT);      
+		sts.put("Feels like statistics:", statsFL);
+		
+		return sts;
+	}
+	
+	public void saveFile(JSONObject obj,String route)
 	{
 	try {
-		 File dbOrig = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt");
-	     File dbCopy = new File("C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.json");
-	     Files.copy( dbOrig.toPath(), dbCopy.toPath() );
-	     
-	     
-	     /*InputStream in = new FileInputStream(dbOrig);
-	     OutputStream out = new FileOutputStream(dbCopy);
-	     byte[] buf = new byte[1024];
-	     int len;
-	     while ((len = in.read(buf)) > 0) {
-	        out.write(buf, 0, len);
-	     }
-	     in.close();
-		BufferedWriter writer = new BufferedWriter(new FileWriter
-			    (dbCopy));//"C:\\Users\\Nicoló\\git\\EsameOOP\\ESAMEOOP\\src\\main\\java\\it\\univpm\\ESAMEOOP\\file.txt"));
-		JSONArray weather = (JSONArray)obj.get("Weather Information:");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(route));
+		writer.write("[ " + "\n");
+		JSONArray weather = (JSONArray)obj.get("Temp Information:");
 		for (int i = 0; i<weather.size();i++)
 		{
 		        
@@ -202,16 +226,19 @@ public class TempServiceHistory implements TempInterface {
 			    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
 			    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
 			    data.setFeels_like((double) Temp.get("Feels_like"));
-			    writer.write("Temp: "+data.getTemp()+"\n");
-			    writer.write("Temp_MIN: "+data.getTemp_MIN()+"\n");
-			    writer.write("Temp_MAX: "+data.getTemp_MAX()+"\n");
-			    writer.write("Feels_like: "+data.getFeels_like()+"\n");
-			    
-			  //  out.close();
+			    writer.write("[");
+			    writer.write("{");
+			    writer.write('"' + "Temp"+ '"'+": "+data.getTemp()+",");
+			    writer.write('"' +"Temp_MIN"+ '"'+": "+data.getTemp_MIN()+",");
+			    writer.write('"'+"Temp_MAX"+ '"'+ ": "+data.getTemp_MAX()+",");
+			    writer.write('"'+"Feels_like"+'"'+ ": "+data.getFeels_like()+",");
+			    writer.write("}");
+			    writer.write("]" + "\n");
 		   
 
 
 		}
+		writer.write("\n"+"]");
 		writer.close();
 
 		
@@ -219,5 +246,5 @@ public class TempServiceHistory implements TempInterface {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-}*/
+}
 }
