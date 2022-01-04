@@ -19,10 +19,14 @@ public class TempCompare {
 	private double average;
 	private double variance;
 	
-	JSONObject obj;
-	JSONObject sts;
+	String route = System.getProperty("user.dir") + "/src/main/resources/" + "HistoryStatistics";
 	
-	public void/*JSONObject*/ CompareCurrent(City city) {
+	public String getRoute() {
+		return route;
+	}
+
+	public JSONObject CompareCurrent(City city) {
+		
 		
 		JSONArray weather = new JSONArray();
 				
@@ -37,36 +41,14 @@ public class TempCompare {
 		
 		weather.add(WeatherData);	
 	    }
+		
+		JSONObject obj = new JSONObject();
 		   
 		obj.put("Current Information", weather);
 		
-		//return obj;
+		return obj;
 	}
 	
-    public void/*JSONObject*/ CompareHistory (String route) {
-		
-		StatsTemp StatsT = new StatsTemp();
-		JSONObject statsT = new JSONObject(); 
-		
-		statsT.put("Temp_MAX", StatsT.getTempMax(route));
-		statsT.put("Temp_MIN",StatsT.getTempMin(route));
-		statsT.put("Average", StatsT.getAverage(route));
-		statsT.put("Variance", StatsT.getVariance(route));
-		
-		StatsFeelsLike StatsFL = new StatsFeelsLike();
-		JSONObject statsFL = new JSONObject();
-		
-		statsFL.put("Temp_MAX",  StatsFL.getTempMax(route));
-		statsFL.put("Temp_MIN",StatsFL.getTempMin(route));
-		statsFL.put("Average", StatsFL.getAverage(route));
-		statsFL.put("Variance", StatsFL.getVariance(route));
-		
-	    sts.put("Temperature statistics:", statsT);      
-		sts.put("Feels like statistics:", statsFL);
-		
-		//return sts;
-	}
-    
     public JSONObject Compare(JSONObject obj, JSONObject sts) {
     	
     	JSONObject compare = new JSONObject();

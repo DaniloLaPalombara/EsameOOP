@@ -117,9 +117,10 @@ public class TempController {
 		openweatherservicehistory.setStart(start);
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
-	    compare.CompareCurrent(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id)));
-	    
-	    return new ResponseEntity<>(
+	    String route = compare.getRoute();
+		openweatherservicehistory.Saving(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),route );
+		
+	    return new ResponseEntity<>(compare.Compare(compare.CompareCurrent(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))),openweatherservicehistory.Statistics(route)), HttpStatus.OK);
 
 	}
 }

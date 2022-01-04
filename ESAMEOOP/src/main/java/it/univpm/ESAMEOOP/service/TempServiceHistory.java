@@ -201,7 +201,7 @@ public class TempServiceHistory implements TempInterface {
 			        data.setTemp((double) Temp.get("Temp"));
 				    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
 				    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-				    data.setFeels_like((double) Temp.get("Feels_like"));
+				    data.setFeels_like((long) Temp.get("Feels_like"));
 				    writer.write("[");
 				    writer.write("{");
 				    writer.write('"' + "Temp"+ '"'+": "+data.getTemp()+",");
