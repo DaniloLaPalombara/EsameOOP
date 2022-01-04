@@ -16,5 +16,5 @@ public interface TempInterface {
 	public abstract JSONObject createJSON(City city);
 	public abstract JSONObject getDataWeather(long id);
 	public abstract City setDataWeather (JSONObject forecast);
-	//public abstract void saveFile(JSONObject obj);
+	public abstract JSONObject Statistics(String route);
 }

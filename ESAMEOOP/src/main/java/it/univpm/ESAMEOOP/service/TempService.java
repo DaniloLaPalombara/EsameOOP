@@ -42,8 +42,6 @@ public class TempService implements TempInterface {
 		Vector <DataTemp> forecast=new Vector<DataTemp>();
     	int counter=0;
     	
-
-
 		public int getCounter() {
 			return counter;
 		}
@@ -130,8 +128,8 @@ public class TempService implements TempInterface {
 		}
 
 		/**
-		 * Metodo che prende i dati di interesse e li utilizza per creare il 
-		 * JSONObject che restituirà la chiamata tramite controller
+		 * Metodo che prende i dati di interesse riguaradanti la città e
+	     * le temperature e li utilizza per creare un JSONObject
 		 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 		 * un metodo che deriva da una superclasse o da un'interfaccia
 		 */
@@ -155,8 +153,6 @@ public class TempService implements TempInterface {
 				WeatherData.put("Temp", data.getTemp());
 				WeatherData.put("Temp_MAX", data.getTemp_MAX());
 				WeatherData.put("Temp_MIN", data.getTemp_MIN());
-				//WeatherData.put("Weather:", data.getWeather());
-				//WeatherData.put("Descriprion:", data.getWeather_description());
 				
 				weather.add(WeatherData);
 				
@@ -172,10 +168,12 @@ public class TempService implements TempInterface {
 		 * Metodo che permette di salvare ogni ora i dati relativi alle
 		 * temperature di una città
 		 * @param obj Il JSONObject contenente le informazioni sulle temperature
-		 * @param id L'indirizzo relativa ad una città
+		 * @param id L'indirizzo relativo ad una città
+		 * @param call Il numero di chiamate da effettuare
+		 * @param interval L'intervallo temporale tra una chiamata e l'altra
+		 * @param route Il percorso sul quale il file viene salvato in locale
 		 * @return vettore contenente gli elementi utili per il calcolo delle statistiche
 		 */
-		
 	    public void Saving(JSONObject obj,int call,int interval,String route) {
 	    	
 	    	File file = new File(route);
@@ -201,14 +199,6 @@ public class TempService implements TempInterface {
 	    				JSONArray temp = (JSONArray) obj.get("Temp Information");
 	    				
 	    				for (int i = 0; i<temp.size();i++) {
-	    					
-	    					//JSONObject Temp = (JSONObject)temp.get(i);
-	    					//DataTemp data= new DataTemp();
-	    					//data.setTemp((double) Temp.get("Temp"));
-	    					//data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-	    					//data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-	    					//data.setFeels_like((double) Temp.get("Feels_like"));
-	    					//forecast.add(data);
 	    					counter++;
 	    				}
 	    				
@@ -238,8 +228,7 @@ public class TempService implements TempInterface {
 	    		}	
 	    	};
 	    	
-	    	timer.schedule(timerT, 0, interval);
-	    	
+	    	timer.schedule(timerT, 0, interval);	
 	    }
 	
 	/**

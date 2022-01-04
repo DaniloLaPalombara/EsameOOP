@@ -23,13 +23,14 @@ import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
 /**
+ * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
+ * per la gestione dell'API
  * @Service è un'annotazione che serve per contrassegnare la classe fornitore 
  * di servizi
  * 
  * @author daniloLaPalombara&nicolòIanni
  *
  */
-
 @Service
 public class TempServiceHistory implements TempInterface {
 	
@@ -39,9 +40,6 @@ public class TempServiceHistory implements TempInterface {
 	private String URLHistory="http://history.openweathermap.org/data/2.5/history/city?id=";
 	private String Apikey="1df4cb04102d63e8af8fa80502fe09ae";
 	protected String route = System.getProperty("user.dir") + "/src/main/resources/" + "HourlyStatistics";
-	
-	
-
 	
 	public String getRoute() {
 		return route;
@@ -84,14 +82,14 @@ public class TempServiceHistory implements TempInterface {
 	@Override
 	public JSONObject getDataWeather(long id) {
 		
-		JSONObject fullInformation=new JSONObject();
+		JSONObject fullInformation = new JSONObject();
 		
 		try {
 			URLConnection openConnection = new URL(URLHistory+id+"&type="+getType()+"&start="+getStart()+"&end="+getStop()+"&appid="+Apikey).openConnection();
 			InputStream in = openConnection.getInputStream();
 			
-			String data= " ";
-			String line=" ";
+			String data = " ";
+			String line = " ";
 			
 	        try {
 	        	InputStreamReader reader= new InputStreamReader(in);
@@ -115,7 +113,7 @@ public class TempServiceHistory implements TempInterface {
     }	
 
 	/**
-	 * metodo che prende dai dati forniti dall'API sono quelli di interesse
+	 * metodo che prende dai dati forniti dall'API solo quelli di interesse
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
@@ -150,8 +148,8 @@ public class TempServiceHistory implements TempInterface {
 	}
 	
 	/**
-	 * metodo che prende i dati di interesse e li utilizza per creare il 
-	 * JSONObject che rescituirà la chiamata tramite controller
+	 * Metodo che prende i dati di interesse riguaradanti la città e lo storico
+	 * delle temperature e li utilizza per creare un JSONObject
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
@@ -183,7 +181,47 @@ public class TempServiceHistory implements TempInterface {
 	}
 	
 	/**
-	 * Metodo che prende i dati riguardanti le statistiche sulle temperature 
+	 * metodo che raccoglie i dati riguardanti lo storico sulle temperature
+	 * correnti e percepite in un file appositamente modellato per il successivo
+	 * calcolo delle statistiche 
+	 * @param obj Il JSONObject contenente
+	 * @param route Il percorso sul quale il file viene salvato in locale
+	 */
+	public void Saving(JSONObject obj, String route) {
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(route));
+			writer.write("[ " + "\n");
+			JSONArray weather = (JSONArray)obj.get("Temp Information:");
+			
+			for (int i = 0; i<weather.size();i++) {
+			        
+			        JSONObject Temp = (JSONObject)weather.get(i);
+					DataTemp data= new DataTemp();
+			        data.setTemp((double) Temp.get("Temp"));
+				    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
+				    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+				    data.setFeels_like((double) Temp.get("Feels_like"));
+				    writer.write("[");
+				    writer.write("{");
+				    writer.write('"' + "Temp"+ '"'+": "+data.getTemp()+",");
+				    writer.write('"' +"Temp_MIN"+ '"'+": "+data.getTemp_MIN()+",");
+				    writer.write('"'+"Temp_MAX"+ '"'+ ": "+data.getTemp_MAX()+",");
+				    writer.write('"'+"Feels_like"+'"'+ ": "+data.getFeels_like()+",");
+				    writer.write("}");
+				    writer.write("]" + "\n");
+			}
+			writer.write("\n"+"]");
+			writer.close();
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metodo che prende i dati riguardanti le statistiche sullo storico delle temperature 
 	 * correnti e percepite e li utilizza per creare un JSONObject
 	 */
 	public JSONObject Statistics(String route) {
@@ -210,41 +248,4 @@ public class TempServiceHistory implements TempInterface {
 		
 		return sts;
 	}
-	
-	public void saveFile(JSONObject obj,String route)
-	{
-	try {
-		BufferedWriter writer = new BufferedWriter(new FileWriter(route));
-		writer.write("[ " + "\n");
-		JSONArray weather = (JSONArray)obj.get("Temp Information:");
-		for (int i = 0; i<weather.size();i++)
-		{
-		        
-		        JSONObject Temp = (JSONObject)weather.get(i);
-				DataTemp data= new DataTemp();
-		        data.setTemp((double) Temp.get("Temp"));
-			    data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-			    data.setTemp_MAX((double) Temp.get("Temp_MAX"));
-			    data.setFeels_like((double) Temp.get("Feels_like"));
-			    writer.write("[");
-			    writer.write("{");
-			    writer.write('"' + "Temp"+ '"'+": "+data.getTemp()+",");
-			    writer.write('"' +"Temp_MIN"+ '"'+": "+data.getTemp_MIN()+",");
-			    writer.write('"'+"Temp_MAX"+ '"'+ ": "+data.getTemp_MAX()+",");
-			    writer.write('"'+"Feels_like"+'"'+ ": "+data.getFeels_like()+",");
-			    writer.write("}");
-			    writer.write("]" + "\n");
-		   
-
-
-		}
-		writer.write("\n"+"]");
-		writer.close();
-
-		
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-}
 }

@@ -15,6 +15,7 @@ import it.univpm.ESAMEOOP.filters.DailyFilter;
 import it.univpm.ESAMEOOP.filters.WeekFilter;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.service.StatsTemp;
+import it.univpm.ESAMEOOP.service.TempCompare;
 import it.univpm.ESAMEOOP.service.TempService;
 import it.univpm.ESAMEOOP.service.TempServiceHistory;
 
@@ -33,6 +34,8 @@ public class TempController {
 	DailyFilter dailyfilter;
 	@Autowired
 	WeekFilter weekfilter;
+	@Autowired
+	TempCompare compare;
 
 	
 	@RequestMapping(value = "/provaSave")
@@ -72,7 +75,7 @@ public class TempController {
 		openweatherservicehistory.setStop(stop);
 		openweatherservicehistory.setType(type);
 		String route = openweatherservicehistory.getRoute();
-		openweatherservicehistory.saveFile(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),route );
+		openweatherservicehistory.Saving(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),route );
 		return new ResponseEntity<>(openweatherservicehistory.Statistics(route),HttpStatus.OK);
 	}
 	
@@ -104,9 +107,19 @@ public class TempController {
 	    {
 	    	i++;
 	    }
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);
+		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);				
+	}
+	
+	@RequestMapping(value = "/TempCompare")
+	public ResponseEntity<Object> getCompare(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) {
+		
+		openweatherservicehistory.setStart(start);
+		openweatherservicehistory.setStop(stop);
+		openweatherservicehistory.setType(type);
+	    compare.CompareCurrent(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id)));
 	    
-	    
-					
+	    return new ResponseEntity<>(
+
 	}
 }
