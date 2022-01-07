@@ -18,14 +18,28 @@ import it.univpm.ESAMEOOP.service.TempService;
 import it.univpm.ESAMEOOP.service.TempServiceHistory;
 
 
-
+/**
+ * Controller con il quale chiamare le rotte e che elabora
+ *  le richieste web degli utenti
+ * @RestController è un'annotazione che aggiunge implicitamente @Controller
+ * e @ResponseBody, la prima viene utilizzata per contrassegnare le classi
+ * come Spring MVC Controller, la seconda indica che il tipo restituito deve
+ * essere scritto direttamente nel corpo della richiesta HTTP
+ * 
+ * @author daniloLaPalombara&nicolòIanni
+ *
+ */
 @RestController
 public class TempController {
 	
+	/**
+	 * @Autowired è un'annotazione utile nel guidare l'inezione
+	 * delle dipendenze per mezzo di annotazioni
+	 */
 	@Autowired
-	TempService openweatherservice;
+	TempService tempservice;
 	@Autowired
-	TempServiceHistory openweatherservicehistory;
+	TempServiceHistory tempservicehistory;
 	@Autowired
 	StatsTemp stats;
 	@Autowired
@@ -35,90 +49,127 @@ public class TempController {
 	@Autowired
 	TempCompare compare;
 
+	/**
+	 * Rotta che restituisce i dati riguaradanti la temperatura corrente di una città
+	 * @RequestMapping è un'annotazione che ha lo scopo di definire
+	 * un'associazione tra un handler ed un gruppo URL
+	 */
 	@RequestMapping(value = "/CurrentTemp")
-	public ResponseEntity <Object> getforecast(@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException {
+	public ResponseEntity <Object> getCurrent(@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException {
 		
-		return new ResponseEntity<>(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))),HttpStatus.OK);
+		return new ResponseEntity<>(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))),HttpStatus.OK);
 	}
 	
+	/**
+	 * Rotta che restituisce i dati riguaradanti lo storico delle temperature
+	 * in una fascia oraria di una città
+	 */
 	@RequestMapping(value = "/HistoryTemp")
-	public ResponseEntity <Object> getforecas(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
+	public ResponseEntity <Object> getHistory(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
 			,@RequestParam(name="end",defaultValue="1628796785")Integer stop, @RequestParam(name="id", defaultValue="3183087") Integer id) throws JSONObjectNullException {
 		
-		openweatherservicehistory.setStart(start);
-		openweatherservicehistory.setStop(stop);
-		openweatherservicehistory.setType(type);
-		return new ResponseEntity<>(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))), HttpStatus.OK);
+		tempservicehistory.setStart(start);
+		tempservicehistory.setStop(stop);
+		tempservicehistory.setType(type);
+		return new ResponseEntity<>(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))), HttpStatus.OK);
 	}
 	
+	/**
+	 * Rotta che salva localmente e restituisce le statistiche sulle temperature attuali e
+	 * percepite effettuate in una fascia oraria 
+	 */
 	@RequestMapping(value = "/HourlySaving&Statistics")
 	public ResponseEntity <Object> getHourlySaveStatistics(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
 			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws DivisionByZeroException, JSONObjectNullException {
 		
-		openweatherservicehistory.setStart(start);
-		openweatherservicehistory.setStop(stop);
-		openweatherservicehistory.setType(type);
-		String route = openweatherservicehistory.getRoute();
-		openweatherservicehistory.Saving(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),route );
-		return new ResponseEntity<>(openweatherservicehistory.Statistics(route),HttpStatus.OK);
+		tempservicehistory.setStart(start);
+		tempservicehistory.setStop(stop);
+		tempservicehistory.setType(type);
+		String route = tempservicehistory.getRoute();
+		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))),route );
+		return new ResponseEntity<>(tempservicehistory.Statistics(route),HttpStatus.OK);
 	}
 	
+	/**
+	 * Rotta che restituisce le statistiche sulle temperature attuali e
+	 * percepite effettuate in una fascia oraria
+	 */
 	@RequestMapping(value = "HourlyStatistics")
 	public ResponseEntity <Object> getHourlyStatistics(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
-		String route= openweatherservicehistory.getRoute();
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);
+		String route= tempservicehistory.getRoute();
+		return new ResponseEntity<>(tempservice.Statistics(route), HttpStatus.OK);
 	}
 	
+	/**
+	 *Rotta che salva localmente e restituisce le statistiche sulle temperature attuali e
+	 *percepite effettuate nell'arco di una giornata
+	 */
 	@RequestMapping(value = "/DailySaving&Statistics")
 	public ResponseEntity<Object> getDailySaveStatistics(@RequestParam(name="id", defaultValue="3183087")Integer id) throws JSONObjectNullException, DivisionByZeroException {
 		
 		int i=0;
 		String route= dailyfilter.getRoute();
-		openweatherservice.Saving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), dailyfilter.getMaxCalls(), dailyfilter.getInterval(),route);	
-	    while(openweatherservice.getCounter()!= dailyfilter.getMaxCalls()) {
+		tempservice.Saving(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))), dailyfilter.getMaxCalls(), dailyfilter.getInterval(),route);	
+	    while(tempservice.getCounter()!= dailyfilter.getMaxCalls()) {
 	    	i++;
 	    }
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);				
+		return new ResponseEntity<>(tempservice.Statistics(route), HttpStatus.OK);				
 	}
 	
+	/**
+	 * Rotta che restituisce le statistiche sulle temperature attuali e
+	 * percepite effettuate nell'arco di una giornata
+	 */
 	@RequestMapping(value = "DailyStatistics")
 	public ResponseEntity <Object> getDailyStatistics(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
 		String route= dailyfilter.getRoute();
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);
+		return new ResponseEntity<>(tempservice.Statistics(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * Rotta che salva localmente e restituisce le statistiche sulle temperature attuali e
+	 * percepite effettuate nell'arco di una settimana
+	 */
 	@RequestMapping(value = "/WeekSaving&Statistics")
 	public ResponseEntity<Object> getWeekSaveStatistic(@RequestParam(name="id", defaultValue="3183087")Integer id) throws JSONObjectNullException, DivisionByZeroException {
 		
 		int i=0;
 		String route= weekfilter.getRoute();
-		openweatherservice.Saving(openweatherservice.createJSON(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))), weekfilter.getMaxCalls(), weekfilter.getInterval(),route);	
-	    while(openweatherservice.getCounter()!= weekfilter.getMaxCalls()) {
+		tempservice.Saving(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))), weekfilter.getMaxCalls(), weekfilter.getInterval(),route);	
+	    while(tempservice.getCounter()!= weekfilter.getMaxCalls()) {
 	    	i++;
 	    }
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);				
+		return new ResponseEntity<>(tempservice.Statistics(route), HttpStatus.OK);				
 	}
 	
+	/**
+	 *Rotta che restituisce le statistiche sulle temperature attuali e
+	 *percepite effettuate nell'arco di una settimana
+	 */
 	@RequestMapping(value = "WeekStatistics")
 	public ResponseEntity <Object> getWeekStatistic(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
 		String route= weekfilter.getRoute();
 		
-		return new ResponseEntity<>(openweatherservice.Statistics(route), HttpStatus.OK);
+		return new ResponseEntity<>(tempservice.Statistics(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * Rotta che restituisce le statistiche sulle temperature attuali e
+	 * percepite effettuate in una fascia oraria, confrontate con i dati della temperatura attuale
+	 */
 	@RequestMapping(value = "/TempCompare")
 	public ResponseEntity<Object> getCompare(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
 			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException, DivisionByZeroException {
 		
-		openweatherservicehistory.setStart(start);
-		openweatherservicehistory.setStop(stop);
-		openweatherservicehistory.setType(type);
+		tempservicehistory.setStart(start);
+		tempservicehistory.setStop(stop);
+		tempservicehistory.setType(type);
 	    String route = compare.getRoute();
-		openweatherservicehistory.Saving(openweatherservicehistory.createJSON(openweatherservicehistory.setDataWeather(openweatherservicehistory.getDataWeather(id))),route );
+		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))),route );
 		
-	    return new ResponseEntity<>(compare.Compare(compare.CompareCurrent(openweatherservice.setDataWeather(openweatherservice.getDataWeather(id))),openweatherservicehistory.Statistics(route)), HttpStatus.OK);
+	    return new ResponseEntity<>(compare.Compare(compare.CompareCurrent(tempservice.setDataWeather(tempservice.getDataWeather(id))),tempservicehistory.Statistics(route)), HttpStatus.OK);
 	}
 }

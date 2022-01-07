@@ -17,7 +17,7 @@ import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
  * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
  * per il calcolo dei valori riguardanti le statistiche sulle temperature correnti
  * @Service è un'annotazione che serve per contrassegnare la classe fornitore 
- * di servizi
+ *         di servizi
  * @author daniloLaPalombara&nicolòIanni
  *
  */
@@ -51,7 +51,7 @@ public class StatsTemp implements StatsInterface {
 	/**
 	 * Metodo che calcola la temperatura massima corrente di una città
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 *          un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
 	public double getTempMax(String route) {
@@ -80,7 +80,7 @@ public class StatsTemp implements StatsInterface {
 	/**
 	 * Metodo che calcola la temperatura minima corrente di una città
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 *          un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
 	public double getTempMin(String route) {
@@ -109,8 +109,9 @@ public class StatsTemp implements StatsInterface {
 	
 	/**
 	 * Metodo che calcola la temperatura media corrente di una città
+	 * @throws DivisionByZeroException Gestione dell'errore nel caso in cui il denominatore sia zero
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 *          un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
 	public double getAverage(String route) throws DivisionByZeroException {
@@ -139,8 +140,9 @@ public class StatsTemp implements StatsInterface {
 
 	/**
 	 * Metodo che calcola la varianza della temperatura corrente di una città
+	 * @throws DivisionByZeroException Gestione dell'errore nel caso in cui il denominatore sia zero
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
-	 * un metodo che deriva da una superclasse o da un'interfaccia
+	 *          un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
 	public double getVariance(String route) throws DivisionByZeroException {

@@ -2,10 +2,15 @@ package it.univpm.ESAMEOOP.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
+import it.univpm.ESAMEOOP.errors.TimeSlotException;
 
 
 /**
@@ -44,18 +49,30 @@ public class DataTemp {
 	 private double temp_MAX;
 	 String weather;
 	 String weather_description;
+	 long start;
+	 long stop;
 	 
 	/** 
 	 * @return date in formato UNIX
 	 */
-	public long getDate_UNIX() {
-		return date_UNIX;
-	}
+	/*public void getDate_UNIX(CharSequence start, CharSequence stop) throws TimeSlotException {
+		
+		
+		if(start != null && stop != null ) {
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").withZone(ZoneOffset.systemDefault());
+			
+			if((Instant.from(dtf.parse(start)).toEpochMilli()/1000) < (Instant.from(dtf.parse(stop)).toEpochMilli()/1000)) {
+			
+			this.start = Instant.from(dtf.parse(start)).toEpochMilli()/1000;
+			this.stop = Instant.from(dtf.parse(stop)).toEpochMilli()/1000;
+		    } else {
+		    	
+		    	throw new TimeSlotException("Error: invalid range");
+		    }
+		}
+	}*/	
 	
-	/**
-	 * @param date_UNIX
-	 * @return date in formato UNIX
-	 */
 	public long setDate_UNIX(long date_UNIX) {
 		return this.date_UNIX = date_UNIX;
 	}
@@ -70,67 +87,39 @@ public class DataTemp {
 	    return this.date=dateFormat.format(cal.getTime());
 	}
 	
-	/**
-	 * @param date
-	 * @return date 
-	 */
 	public String setDate(String date) {
 		return this.date=date;
 
 	}
 	
-	/**
-	 * @return temperature
-	 */
 	public double getTemp() {
 		return temp;
 	}
 	
-	/**
-	 * @param temp The temperature to set
-	 */
 	public void setTemp(double temp) {
 		this.temp = temp;
 	}
-	
-	/**
-	 * @return perceived temperature
-	 */
+
 	public double getFeels_like() {
 		return feels_like;
 	}
 	
-	/**
-	 * @param feels_like The perceived temperature to set
-	 */
 	public void setFeels_like(double feels_like) {
 		this.feels_like = feels_like;
 	}
 	
-	/**
-	 * @return minimum temperature
-	 */
 	public double getTemp_MIN() {
 		return temp_MIN;
 	}
 	
-	/**
-	 * @param temp_MIN The minimum temperature to set
-	 */
 	public void setTemp_MIN(double temp_MIN) {
 		this.temp_MIN = temp_MIN;
 	}
 	
-	/**
-	 * @return maximum temperature
-	 */
 	public double getTemp_MAX() {
 		return temp_MAX;
 	}
 	
-	/**
-	 * @param temp_MAX The maximum temperature to set
-	 */
 	public void setTemp_MAX(double temp_MAX) {
 		this.temp_MAX = temp_MAX;
 	}

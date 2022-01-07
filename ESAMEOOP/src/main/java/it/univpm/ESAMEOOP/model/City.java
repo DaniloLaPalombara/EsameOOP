@@ -42,86 +42,50 @@ public class City {
 	private Vector<DataTemp> DataTemp = new Vector<>();
 	
 	
-	/**
-	 * @return Id
-	 */
 	public double getId() {
 		return id;
 	}
 	
-    /**
-     * @param id The id to set 
-     */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return Country
-	 */
 	public String getCountry() {
 		return country;
 	}
 
-	/**
-	 * @param country The country to set
-	 */
 	public void setCountry(String country) {
 		this.country = country;
 	}
 
-	/**
-	 * @return Name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name The name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return Latitude
-	 */
 	public double getLat() {
 		return lat;
 	}
 
-	/**
-	 * @param lat The latitude to set
-	 */
 	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
-	/**
-	 * @return Longitude
-	 */
 	public double getLon() {
 		return lon;
 	}
 
-	/**
-	 * @param lon The longitude to set
-	 */
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
 
-	/**
-	 * @return vector DataTemp
-	 */
 	public Vector<DataTemp> getDataTemp() {
 		return DataTemp;
 	}
 
-	/**
-	 * @param DataTemp The vector DataTemp to set
-	 */
 	public void setDataTemp(Vector<DataTemp> DataTemp) {
 		this.DataTemp = DataTemp;
 	}
