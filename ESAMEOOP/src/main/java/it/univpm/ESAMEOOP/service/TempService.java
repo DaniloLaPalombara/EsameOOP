@@ -1,6 +1,7 @@
 package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -19,6 +20,8 @@ import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
+import it.univpm.ESAMEOOP.errors.JSONObjectNullException;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
@@ -53,16 +56,16 @@ public class TempService implements TempInterface {
 		 * un metodo che deriva da una superclasse o da un'interfaccia
 		 */
 		@Override
-		public JSONObject getDataWeather(long id)
-		{
+		public JSONObject getDataWeather(long id) {
+			
 			JSONObject fullInformation=new JSONObject();
 			
 			try {
 				URLConnection openConnection = new URL(URLCurrent+id+"&units=metric"+"&appid="+Apikey).openConnection();
 				InputStream in = openConnection.getInputStream();
 				
-				String data= " ";
-				String line=" ";
+				String data = " ";
+				String line = " ";
 				
 		        try {
 		        	InputStreamReader reader= new InputStreamReader(in);
@@ -76,7 +79,8 @@ public class TempService implements TempInterface {
 				}
 				
 		        fullInformation = (JSONObject) JSONValue.parseWithException(data);
-				} catch (ParseException | IOException e) {
+		        
+		        } catch (ParseException | IOException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -91,35 +95,45 @@ public class TempService implements TempInterface {
 		 * un metodo che deriva da una superclasse o da un'interfaccia
 		 */
 		@Override
-		public City setDataWeather(JSONObject fullInformation)
+		public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException
 		{
 			DataTemp data = new DataTemp();
 			City city= new City();
 			JSONObject cityData = (JSONObject) fullInformation;
+			if(cityData == null) {
+				throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			}
 			city.setId((long)cityData.get("id"));
 			city.setName((String)cityData.get("name"));
 		    data.setDate_UNIX((long)cityData.get("dt"));
 		    
 			JSONObject country=(JSONObject)cityData.get("sys");
+			if(country == null) {
+				throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			}
 			city.setCountry((String)country.get("country"));		
 			JSONObject cord = (JSONObject)cityData.get("coord");
+			if(cord == null) {
+				throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			}
 			city.setLon((double)cord.get("lon"));
 			city.setLat((double)cord.get("lat"));
 
 			JSONObject list = (JSONObject)cityData.get("main");
-			//Vector <DataTemp> forecast=new Vector<DataTemp>();
+			if(list == null) {
+				throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			}
 			data.setFeels_like((double)list.get("feels_like"));
 			data.setTemp((double)list.get("temp"));
 			data.setTemp_MIN((double)list.get("temp_min"));
 			data.setTemp_MAX((double)list.get("temp_max"));
 			
 			JSONArray weather=(JSONArray)cityData.get("weather");
-			for(int i = 0; i <weather.size();i++)
-			{
+			for(int i = 0; i <weather.size();i++) {
+				
 				JSONObject List =(JSONObject)weather.get(i);
 				data.setWeather((String)List.get("main"));
-				data.setWeather_description((String)List.get("description"));
-				
+				data.setWeather_description((String)List.get("description"));	
 			}
 				forecast.add(data);	
 		
@@ -145,8 +159,8 @@ public class TempService implements TempInterface {
 			
 			JSONArray weather = new JSONArray();
 			
-			for(DataTemp data:city.getDataTemp())
-			{
+			for(DataTemp data:city.getDataTemp()) {
+				
 				JSONObject WeatherData = new JSONObject();
 				WeatherData.put("Date", data.getDate());
 				WeatherData.put("Feels_like", data.getFeels_like());
@@ -178,9 +192,7 @@ public class TempService implements TempInterface {
 	    	
 	    	File file = new File(route);
 	    	FileWriter fileW;
-	    	//Vector forecast = new Vector();
 
-	    	
 	    	try {
 	    		fileW = new FileWriter(file, true);
 	    		BufferedWriter buffered = new BufferedWriter(fileW);
@@ -234,8 +246,9 @@ public class TempService implements TempInterface {
 	/**
 	 * Metodo che prende i dati riguardanti le statistiche sulle temperature 
 	 * correnti e percepite e li utilizza per creare un JSONObject
+	 * @throws DivisionByZeroException 
 	 */
-	public JSONObject Statistics(String route) {
+	public JSONObject Statistics(String route) throws DivisionByZeroException {
 		
 		StatsTemp StatsT = new StatsTemp();
 		JSONObject statsT = new JSONObject(); 

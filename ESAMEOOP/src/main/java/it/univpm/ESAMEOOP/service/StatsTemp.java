@@ -11,6 +11,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
+
 /**
  * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
  * per il calcolo dei valori riguardanti le statistiche sulle temperature correnti
@@ -38,7 +40,6 @@ public class StatsTemp implements StatsInterface {
 			obj = (JSONArray) parser.parse(new InputStreamReader(new FileInputStream(route)));
 			
 		} catch (ParseException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -112,7 +113,7 @@ public class StatsTemp implements StatsInterface {
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public double getAverage(String route) {
+	public double getAverage(String route) throws DivisionByZeroException {
 		
 		 JSONArray obj = (JSONArray) Parse(route);
 		 
@@ -127,6 +128,11 @@ public class StatsTemp implements StatsInterface {
 				 temp+=tempAverage;
 			}
 		}
+		 
+		 if(obj.size()==0) {
+			 
+			 throw new DivisionByZeroException("ERROR: division by zero is impossible"); 
+		 }
 		
 		return average = Math.round((temp/obj.size()*100)/100);	
 	}
@@ -137,7 +143,7 @@ public class StatsTemp implements StatsInterface {
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public double getVariance(String route) {
+	public double getVariance(String route) throws DivisionByZeroException {
 		
 		double sum = 0;
 		JSONArray obj = (JSONArray) Parse(route);
@@ -153,6 +159,11 @@ public class StatsTemp implements StatsInterface {
 				sum += Math.pow((tempVariance-average), 2);	
 			}
 		}
+		
+		if(obj.size()==0) {
+			 
+			 throw new DivisionByZeroException("ERROR: division by zero is impossible"); 
+		 }
 			
 		return variance = sum/(obj.size()-1);
 	}	

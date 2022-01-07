@@ -19,6 +19,8 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
+import it.univpm.ESAMEOOP.errors.JSONObjectNullException;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
@@ -53,21 +55,17 @@ public class TempServiceHistory implements TempInterface {
 		this.type = type;
 	}
 
-
 	public long getStart() {
 		return start;
 	}
-
 
 	public void setStart(long start) {
 		this.start = start;
 	}
 
-
 	public long getStop() {
 		return stop;
 	}
-
 
 	public void setStop(long stop) {
 		this.stop = stop;
@@ -114,17 +112,24 @@ public class TempServiceHistory implements TempInterface {
 
 	/**
 	 * metodo che prende dai dati forniti dall'API solo quelli di interesse
+	 * @throws JSONObjectNullException Gestione dell'errore nel caso un JSONObject sia nullo
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public City setDataWeather(JSONObject fullInformation) {
+	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException {
 		
 		City city=new City();
 		JSONObject info=(JSONObject)fullInformation;
+		if(info == null) {
+			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+		}
 		city.setId((long)info.get("city_id"));
 		
 		JSONArray list = (JSONArray)info.get("list");
+		if(list == null) {
+			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+		}
 		Vector <DataTemp> forecast = new Vector<>();
 		
 		for(int i = 0; i < list.size();i++) {
@@ -215,7 +220,6 @@ public class TempServiceHistory implements TempInterface {
 			writer.close();
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -223,8 +227,9 @@ public class TempServiceHistory implements TempInterface {
 	/**
 	 * Metodo che prende i dati riguardanti le statistiche sullo storico delle temperature 
 	 * correnti e percepite e li utilizza per creare un JSONObject
+	 * @throws DivisionByZeroException 
 	 */
-	public JSONObject Statistics(String route) {
+	public JSONObject Statistics(String route) throws DivisionByZeroException {
 		
 		StatsTemp StatsT = new StatsTemp();
 		JSONObject statsT = new JSONObject(); 

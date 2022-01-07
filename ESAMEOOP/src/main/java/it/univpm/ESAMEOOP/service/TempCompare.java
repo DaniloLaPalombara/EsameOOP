@@ -7,6 +7,14 @@ import org.springframework.stereotype.Service;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
+/**
+ * Metodo che permette di confrontare le statistiche delle temperature in
+ * una fascia oraria con le temperature correnti
+ * @Service è un'annotazione che serve per contrassegnare la classe fornitore 
+ * di servizi
+ * @author daniloLaPalombara&nicoloIanni
+ *
+ */
 @Service
 public class TempCompare {
 	
@@ -26,7 +34,6 @@ public class TempCompare {
 	}
 
 	public JSONObject CompareCurrent(City city) {
-		
 		
 		JSONArray weather = new JSONArray();
 				

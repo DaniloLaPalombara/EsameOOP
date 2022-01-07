@@ -2,6 +2,8 @@ package it.univpm.ESAMEOOP.service;
 
 import org.json.simple.*;
 
+import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
+import it.univpm.ESAMEOOP.errors.JSONObjectNullException;
 import it.univpm.ESAMEOOP.model.City;
 
 /**
@@ -15,6 +17,6 @@ public interface TempInterface {
 	
 	public abstract JSONObject createJSON(City city);
 	public abstract JSONObject getDataWeather(long id);
-	public abstract City setDataWeather (JSONObject forecast);
-	public abstract JSONObject Statistics(String route);
+	public abstract City setDataWeather (JSONObject forecast) throws JSONObjectNullException;
+	public abstract JSONObject Statistics(String route) throws DivisionByZeroException;
 }

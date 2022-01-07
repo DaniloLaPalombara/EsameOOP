@@ -10,6 +10,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
+
 /**
  * Classe che implementa l'interfaccia, all'interno vi si trovano i metodi
  * per il calcolo dei valori riguardanti le statistiche sulle temperature percepite
@@ -38,9 +40,8 @@ public class StatsFeelsLike implements StatsInterface {
 			obj = (JSONArray) parser.parse(new InputStreamReader(new FileInputStream(route)));
 			
 		} catch (ParseException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
 		JSONArray data = (JSONArray) obj;
 		
@@ -108,11 +109,12 @@ public class StatsFeelsLike implements StatsInterface {
 	
 	/**
 	 * Metodo che calcola la temperatura media percepita di una città
+	 * @throws DivisionByZeroException Gestione dell'errore nel caso in cui il denominatore sia zero
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public double getAverage(String route) {
+	public double getAverage(String route) throws DivisionByZeroException {
 		
 		JSONArray obj = (JSONArray) Parse(route);
 		
@@ -128,16 +130,22 @@ public class StatsFeelsLike implements StatsInterface {
 			}	
 		}
 		
+		if(obj.size()==0) {
+			 
+			 throw new DivisionByZeroException("ERROR: division by zero is impossible"); 
+		 }
+		
 		return average = Math.round((temp/obj.size()*100)/100);
 	}
 
 	/**
 	 * Metodo che calcola la varianza della temperatura percepita di una città
+	 * @throws DivisionByZeroException Gestione dell'errore nel caso in cui il denominatore sia zero
 	 * @Override è un'annotazione utilizzata per indicare la sovrascrizione di 
 	 * un metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public double getVariance(String route) {
+	public double getVariance(String route) throws DivisionByZeroException {
 		
 		double sum = 0;
 		JSONArray obj = (JSONArray) Parse(route);
@@ -153,6 +161,11 @@ public class StatsFeelsLike implements StatsInterface {
 				sum += Math.pow((tempVariance-average), 2);	
 			}
 		}
+		
+		if(obj.size()==0) {
+			 
+			 throw new DivisionByZeroException("ERROR: division by zero is impossible"); 
+		 }
 			
 		return variance = sum/(obj.size()-1);
 	}	
