@@ -18,7 +18,7 @@ public class Filters{
 	/**
 	 * interval L'intervallo temporale tra una chiamata e l'altra
 	 */
-	protected int interval = 5000;
+	protected int interval = 3600000;
 	
 	/**
 	 * route Il percorso sul quale il file viene salvato in locale
