@@ -1,6 +1,7 @@
 package it.univpm.ESAMEOOP.model;
 
 import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -9,8 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
-
-import it.univpm.ESAMEOOP.errors.TimeSlotException;
 
 
 /**
@@ -27,58 +26,42 @@ public class DataTemp {
 	 * orario dell'osservazione in formato UNIX
 	 */
 	 private long date_UNIX;
-	 /**
+
+	/**
 	  * orario dell'osservazione
 	  */
 	 private String date;
+	 
 	 /**
 	  * temperatura osservata
 	  */
 	 private double temp;
+	 
 	 /**
 	  * temperatura percepita
 	  */
 	 private double feels_like;
+	 
 	 /**
 	  * temperatura minima osservata
 	  */
 	 private double temp_MIN;
+	 
 	 /**
 	  * temperatura massima osservata
 	  */
 	 private double temp_MAX;
-	 String weather;
-	 String weather_description;
-	 long start;
-	 long stop;
 	 
-	/** 
-	 * @return date in formato UNIX
-	 */
-	/*public void getDate_UNIX(CharSequence start, CharSequence stop) throws TimeSlotException {
-		
-		
-		if(start != null && stop != null ) {
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").withZone(ZoneOffset.systemDefault());
-			
-			if((Instant.from(dtf.parse(start)).toEpochMilli()/1000) < (Instant.from(dtf.parse(stop)).toEpochMilli()/1000)) {
-			
-			this.start = Instant.from(dtf.parse(start)).toEpochMilli()/1000;
-			this.stop = Instant.from(dtf.parse(stop)).toEpochMilli()/1000;
-		    } else {
-		    	
-		    	throw new TimeSlotException("Error: invalid range");
-		    }
+	 public long getDate_UNIX() {
+			return date_UNIX;
 		}
-	}*/	
-	
-	public long setDate_UNIX(long date_UNIX) {
-		return this.date_UNIX = date_UNIX;
-	}
-	
+
+		public void setDate_UNIX(long date_UNIX) {
+			this.date_UNIX = date_UNIX;
+		}
+		
 	/**
-	 * @return date
+	 * Metodo per convertire l'orario e la data i formato UNIX
 	 */
 	public String getDate() {
 	    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -122,21 +105,5 @@ public class DataTemp {
 	
 	public void setTemp_MAX(double temp_MAX) {
 		this.temp_MAX = temp_MAX;
-	}
-	
-	public String getWeather() {
-		return weather;
-	}
-	
-	public void setWeather(String weather) {
-		this.weather = weather;
-	}
-	
-	public String getWeather_description() {
-		return weather_description;
-	}
-	
-	public void setWeather_description(String weather_description) {
-		this.weather_description = weather_description;
 	}
 }

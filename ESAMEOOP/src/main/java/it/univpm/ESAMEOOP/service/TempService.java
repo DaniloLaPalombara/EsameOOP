@@ -2,6 +2,7 @@ package it.univpm.ESAMEOOP.service;
 
 import java.io.BufferedReader;
 
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,10 +43,18 @@ import it.univpm.ESAMEOOP.model.DataTemp;
 public class TempService implements TempInterface {
 
 	/**
-	 * 
+	 * Chiave di accesso per l'utilizzo dell'API
 	 */
 	private String Apikey = "1df4cb04102d63e8af8fa80502fe09ae";
+	
+	/**
+	 * Link corrispondente all'API utilizzata
+	 */
 	private String URLCurrent = "http://api.openweathermap.org/data/2.5/weather?id=";
+	
+	/**
+	 * Contatore utile per il numero di elementi da salvare ogni ora
+	 */
 	int counter = 0;
 
 	public int getCounter() {
@@ -59,7 +68,7 @@ public class TempService implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public JSONObject getDataWeather(long id) throws JSONObjectNullException{
+	public JSONObject GetData(long id) throws JSONObjectNullException{
 
 		JSONObject fullInformation = new JSONObject();
 
@@ -107,7 +116,7 @@ public class TempService implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
+	public City setData(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
 		DataTemp data = new DataTemp();
 		City city = new City();
 		JSONObject cityData = (JSONObject) fullInformation;
@@ -143,9 +152,7 @@ public class TempService implements TempInterface {
 		JSONArray weather = (JSONArray) cityData.get("weather");
 		for (int i = 0; i < weather.size(); i++) {
 
-			JSONObject List = (JSONObject) weather.get(i);
-			data.setWeather((String) List.get("main"));
-			data.setWeather_description((String) List.get("description"));
+			JSONObject List = (JSONObject) weather.get(i);;
 		}
 		forecast.add(data);
 

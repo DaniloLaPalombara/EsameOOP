@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OpenWeatherApplication {
+public class TempApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OpenWeatherApplication.class, args);
+		SpringApplication.run(TempApplication.class, args);
 	}
 
 }

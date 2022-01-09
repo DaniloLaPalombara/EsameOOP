@@ -59,7 +59,7 @@ public class TempController {
 	@RequestMapping(value = "/CurrentTemp")
 	public ResponseEntity <Object> getCurrent(@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException, ObjectEmptyException {
 		
-		return new ResponseEntity<>(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))),HttpStatus.OK);
+		return new ResponseEntity<>(tempservice.createJSON(tempservice.setData(tempservice.GetData(id))),HttpStatus.OK);
 	}
 	
 	/**
@@ -68,13 +68,13 @@ public class TempController {
 	 * @throws ObjectEmptyException 
 	 */
 	@RequestMapping(value = "/HistoryTemp")
-	public ResponseEntity <Object> getHistory(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
-			,@RequestParam(name="end",defaultValue="1628796785")Integer stop, @RequestParam(name="id", defaultValue="3183087") Integer id) throws JSONObjectNullException, ObjectEmptyException {
+	public ResponseEntity <Object> getHistory(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1641596401")Integer start
+			,@RequestParam(name="end",defaultValue="1641682801")Integer stop, @RequestParam(name="id", defaultValue="3183087") Integer id) throws JSONObjectNullException, ObjectEmptyException {
 		
 		tempservicehistory.setStart(start);
 		tempservicehistory.setStop(stop);
 		tempservicehistory.setType(type);
-		return new ResponseEntity<>(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))), HttpStatus.OK);
+		return new ResponseEntity<>(tempservicehistory.createJSON(tempservicehistory.setData(tempservicehistory.GetData(id))), HttpStatus.OK);
 	}
 	
 	/**
@@ -83,14 +83,14 @@ public class TempController {
 	 * @throws ObjectEmptyException 
 	 */
 	@RequestMapping(value = "/HourlySaving&Statistics")
-	public ResponseEntity <Object> getHourlySaveStatistics(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
-			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws DivisionByZeroException, JSONObjectNullException, ObjectEmptyException {
+	public ResponseEntity <Object> getHourlySaveStatistics(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1641596401")Integer start
+			,@RequestParam(name="end",defaultValue="1641682801")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws DivisionByZeroException, JSONObjectNullException, ObjectEmptyException {
 		
 		tempservicehistory.setStart(start);
 		tempservicehistory.setStop(stop);
 		tempservicehistory.setType(type);
 		String route = tempservicehistory.getRoute();
-		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))),route );
+		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setData(tempservicehistory.GetData(id))),route );
 		return new ResponseEntity<>(tempservicehistory.Statistics(route),HttpStatus.OK);
 	}
 	
@@ -98,7 +98,7 @@ public class TempController {
 	 * Rotta che restituisce le statistiche sulle temperature attuali e
 	 * percepite effettuate in una fascia oraria
 	 */
-	@RequestMapping(value = "HourlyStatistics")
+	@RequestMapping(value = "/HourlyStatistics")
 	public ResponseEntity <Object> getHourlyStatistics(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
 		String route= tempservicehistory.getRoute();
@@ -115,7 +115,7 @@ public class TempController {
 		
 		int i=0;
 		String route= dailyfilter.getRoute();
-		tempservice.Saving(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))), dailyfilter.getMaxCalls(), dailyfilter.getInterval(),route);	
+		tempservice.Saving(tempservice.createJSON(tempservice.setData(tempservice.GetData(id))), dailyfilter.getMaxCalls(), dailyfilter.getInterval(),route);	
 	    while(tempservice.getCounter()!= dailyfilter.getMaxCalls()) {
 	    	i++;
 	    }
@@ -126,7 +126,7 @@ public class TempController {
 	 * Rotta che restituisce le statistiche sulle temperature attuali e
 	 * percepite effettuate nell'arco di una giornata
 	 */
-	@RequestMapping(value = "DailyStatistics")
+	@RequestMapping(value = "/DailyStatistics")
 	public ResponseEntity <Object> getDailyStatistics(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
 		String route= dailyfilter.getRoute();
@@ -143,7 +143,7 @@ public class TempController {
 		
 		int i=0;
 		String route= weekfilter.getRoute();
-		tempservice.Saving(tempservice.createJSON(tempservice.setDataWeather(tempservice.getDataWeather(id))), weekfilter.getMaxCalls(), weekfilter.getInterval(),route);	
+		tempservice.Saving(tempservice.createJSON(tempservice.setData(tempservice.GetData(id))), weekfilter.getMaxCalls(), weekfilter.getInterval(),route);	
 	    while(tempservice.getCounter()!= weekfilter.getMaxCalls()) {
 	    	i++;
 	    }
@@ -154,7 +154,7 @@ public class TempController {
 	 *Rotta che restituisce le statistiche sulle temperature attuali e
 	 *percepite effettuate nell'arco di una settimana
 	 */
-	@RequestMapping(value = "WeekStatistics")
+	@RequestMapping(value = "/WeekStatistics")
 	public ResponseEntity <Object> getWeekStatistic(@RequestParam(name="id", defaultValue="3183087")Integer id) throws DivisionByZeroException {
 		
 		String route= weekfilter.getRoute();
@@ -168,15 +168,15 @@ public class TempController {
 	 * @throws ObjectEmptyException 
 	 */
 	@RequestMapping(value = "/TempCompare")
-	public ResponseEntity<Object> getCompare(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1628776785")Integer start
-			,@RequestParam(name="end",defaultValue="1628796785")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException, DivisionByZeroException, ObjectEmptyException {
+	public ResponseEntity<Object> getCompare(@RequestParam(name="type",defaultValue="hour") String type,@RequestParam(name="start",defaultValue="1641596401")Integer start
+			,@RequestParam(name="end",defaultValue="1641682801")Integer stop,@RequestParam(name="id",defaultValue="3183087")Integer id) throws JSONObjectNullException, DivisionByZeroException, ObjectEmptyException {
 		
 		tempservicehistory.setStart(start);
 		tempservicehistory.setStop(stop);
 		tempservicehistory.setType(type);
 	    String route = compare.getRoute();
-		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setDataWeather(tempservicehistory.getDataWeather(id))),route );
+		tempservicehistory.Saving(tempservicehistory.createJSON(tempservicehistory.setData(tempservicehistory.GetData(id))),route );
 		
-	    return new ResponseEntity<>(compare.Compare(compare.CompareCurrent(tempservice.setDataWeather(tempservice.getDataWeather(id))),tempservicehistory.Statistics(route)), HttpStatus.OK);
+	    return new ResponseEntity<>(compare.Compare(compare.CompareCurrent(tempservice.setData(tempservice.GetData(id))),tempservicehistory.Statistics(route)), HttpStatus.OK);
 	}
 }

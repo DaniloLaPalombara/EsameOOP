@@ -17,7 +17,7 @@ import it.univpm.ESAMEOOP.model.City;
 public interface TempInterface {
 	
 	public abstract JSONObject createJSON(City city) throws JSONObjectNullException;
-	public abstract JSONObject getDataWeather(long id) throws JSONObjectNullException;
-	public abstract City setDataWeather (JSONObject forecast) throws JSONObjectNullException, ObjectEmptyException;
+	public abstract JSONObject GetData(long id) throws JSONObjectNullException;
+	public abstract City setData (JSONObject forecast) throws JSONObjectNullException, ObjectEmptyException;
 	public abstract JSONObject Statistics(String route) throws DivisionByZeroException;
 }

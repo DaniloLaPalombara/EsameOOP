@@ -37,10 +37,30 @@ import it.univpm.ESAMEOOP.model.DataTemp;
 public class TempServiceHistory implements TempInterface {
 
 	private String type;
+	
+	/**
+	 * L'orario di inizio raccoglimento dati 
+	 */
 	private long start;
+	
+	/**
+	 * L'orario di fine raccoglimento dati
+	 */
 	private long stop;
+	
+	/**
+	 * Link corrispondente all'API utilizzata
+	 */
 	private String URLHistory = "http://history.openweathermap.org/data/2.5/history/city?id=";
+	
+	/**
+	 * Chiave di accesso per l'utilizzo dell'API
+	 */
 	private String Apikey = "1df4cb04102d63e8af8fa80502fe09ae";
+	
+	/**
+	 * Percorso che indica dove verrà salvato il file
+	 */
 	protected String route = System.getProperty("user.dir") + "/src/main/resources/" + "HourlyStatistics";
 
 	public String getRoute() {
@@ -78,7 +98,7 @@ public class TempServiceHistory implements TempInterface {
 	 *           metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public JSONObject getDataWeather(long id)throws JSONObjectNullException {
+	public JSONObject GetData(long id)throws JSONObjectNullException {
 
 		JSONObject fullInformation = new JSONObject();
 
@@ -122,7 +142,7 @@ public class TempServiceHistory implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
+	public City setData(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
 
 		City city = new City();
 		JSONObject info = (JSONObject) fullInformation;
@@ -179,10 +199,10 @@ public class TempServiceHistory implements TempInterface {
 			JSONArray array = new JSONArray();
 			JSONObject WeatherData = new JSONObject();
 			WeatherData.put("Date", data.getDate());
-			WeatherData.put("Feels_like", Math.round((data.getFeels_like() - 273.15) * 100) / 100);
-			WeatherData.put("Temp", (data.getTemp() - 273.15));
-			WeatherData.put("Temp_MAX", (data.getTemp_MAX() - 273.15));
-			WeatherData.put("Temp_MIN", (data.getTemp_MIN() - 273.15));
+			WeatherData.put("Feels_like", Math.round((data.getFeels_like() - 273.15)*100)/100);
+			WeatherData.put("Temp", Math.round((data.getTemp() - 273.15)*100)/100);
+			WeatherData.put("Temp_MAX", Math.round((data.getTemp_MAX() - 273.15)*100)/100);
+			WeatherData.put("Temp_MIN", Math.round((data.getTemp_MIN() - 273.15)*100)/100);
 
 			weather.add(WeatherData);
 		}
@@ -212,9 +232,9 @@ public class TempServiceHistory implements TempInterface {
 
 				JSONObject Temp = (JSONObject) weather.get(i);
 				DataTemp data = new DataTemp();
-				data.setTemp((double) Temp.get("Temp"));
-				data.setTemp_MIN((double) Temp.get("Temp_MIN"));
-				data.setTemp_MAX((double) Temp.get("Temp_MAX"));
+				data.setTemp((long) Temp.get("Temp"));
+				data.setTemp_MIN((long) Temp.get("Temp_MIN"));
+				data.setTemp_MAX((long) Temp.get("Temp_MAX"));
 				data.setFeels_like((long) Temp.get("Feels_like"));
 				writer.write("[");
 				writer.write("{");

@@ -56,11 +56,16 @@ public class TempCompare {
 		return obj;
 	}
 	
+	/**
+	 * Metodo che racchiude in un unico JSONObject i dati sulla
+	 * temeperatura corrente e quelli sullo storico
+	 * @return
+	 */
     public JSONObject Compare(JSONObject obj, JSONObject sts) {
     	
     	JSONObject compare = new JSONObject();
     	
-    	compare.put("Current Information:", obj);
+    	compare.put("Temp Information:", obj);
     	compare.put("History statistics:", sts);
     	
     	return compare;	

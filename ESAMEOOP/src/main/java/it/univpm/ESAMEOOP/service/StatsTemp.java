@@ -167,6 +167,6 @@ public class StatsTemp implements StatsInterface {
 			 throw new DivisionByZeroException("ERROR: division by zero is impossible"); 
 		 }
 			
-		return variance = sum/(obj.size()-1);
+		return variance = Math.round((sum/(obj.size()-1)*100)/100);
 	}	
 }	
