@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
 import it.univpm.ESAMEOOP.errors.JSONObjectNullException;
+import it.univpm.ESAMEOOP.errors.ObjectEmptyException;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
@@ -77,7 +78,7 @@ public class TempServiceHistory implements TempInterface {
 	 *           metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public JSONObject getDataWeather(long id) {
+	public JSONObject getDataWeather(long id)throws JSONObjectNullException {
 
 		JSONObject fullInformation = new JSONObject();
 
@@ -107,6 +108,10 @@ public class TempServiceHistory implements TempInterface {
 			e.printStackTrace();
 		}
 
+		if(fullInformation == null)
+		{
+			throw new JSONObjectNullException("Error: this JSONObject is null");
+		}
 		return fullInformation;
 	}
 
@@ -117,18 +122,18 @@ public class TempServiceHistory implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException {
+	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
 
 		City city = new City();
 		JSONObject info = (JSONObject) fullInformation;
 		if (info == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		city.setId((long) info.get("city_id"));
 
 		JSONArray list = (JSONArray) info.get("list");
 		if (list == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		Vector<DataTemp> forecast = new Vector<>();
 
@@ -149,6 +154,10 @@ public class TempServiceHistory implements TempInterface {
 		}
 
 		city.setDataTemp(forecast);
+		if(city.toString().isEmpty())
+		{
+			throw new ObjectEmptyException("Error: this object is empty");
+		}
 		return city;
 	}
 

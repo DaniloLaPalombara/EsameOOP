@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import it.univpm.ESAMEOOP.errors.DivisionByZeroException;
 import it.univpm.ESAMEOOP.errors.JSONObjectNullException;
+import it.univpm.ESAMEOOP.errors.ObjectEmptyException;
 import it.univpm.ESAMEOOP.model.City;
 import it.univpm.ESAMEOOP.model.DataTemp;
 
@@ -45,7 +46,6 @@ public class TempService implements TempInterface {
 	 */
 	private String Apikey = "1df4cb04102d63e8af8fa80502fe09ae";
 	private String URLCurrent = "http://api.openweathermap.org/data/2.5/weather?id=";
-	Vector<DataTemp> forecast = new Vector<DataTemp>();
 	int counter = 0;
 
 	public int getCounter() {
@@ -59,7 +59,7 @@ public class TempService implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public JSONObject getDataWeather(long id) {
+	public JSONObject getDataWeather(long id) throws JSONObjectNullException{
 
 		JSONObject fullInformation = new JSONObject();
 
@@ -84,11 +84,19 @@ public class TempService implements TempInterface {
 			fullInformation = (JSONObject) JSONValue.parseWithException(data);
 
 		} catch (ParseException | IOException e) {
+			String errore = "Problem with parse";
+			JSONObject error = new JSONObject();
+			error.put("Error", errore);
 			e.printStackTrace();
+			return error;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		if(fullInformation == null)
+		{
+			throw new JSONObjectNullException("Error: this JSONObject is null");
+		}
 		return fullInformation;
 	}
 
@@ -99,12 +107,12 @@ public class TempService implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException {
+	public City setDataWeather(JSONObject fullInformation) throws JSONObjectNullException, ObjectEmptyException {
 		DataTemp data = new DataTemp();
 		City city = new City();
 		JSONObject cityData = (JSONObject) fullInformation;
 		if (cityData == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		city.setId((long) cityData.get("id"));
 		city.setName((String) cityData.get("name"));
@@ -112,25 +120,26 @@ public class TempService implements TempInterface {
 
 		JSONObject country = (JSONObject) cityData.get("sys");
 		if (country == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		city.setCountry((String) country.get("country"));
 		JSONObject cord = (JSONObject) cityData.get("coord");
 		if (cord == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		city.setLon((double) cord.get("lon"));
 		city.setLat((double) cord.get("lat"));
 
 		JSONObject list = (JSONObject) cityData.get("main");
 		if (list == null) {
-			throw new JSONObjectNullException("Error: this JSONObjcet is null");
+			throw new JSONObjectNullException("Error: this JSONObject is null");
 		}
 		data.setFeels_like((double) list.get("feels_like"));
 		data.setTemp((double) list.get("temp"));
 		data.setTemp_MIN((double) list.get("temp_min"));
 		data.setTemp_MAX((double) list.get("temp_max"));
 
+		Vector<DataTemp> forecast = new Vector<DataTemp>();
 		JSONArray weather = (JSONArray) cityData.get("weather");
 		for (int i = 0; i < weather.size(); i++) {
 
@@ -141,6 +150,9 @@ public class TempService implements TempInterface {
 		forecast.add(data);
 
 		city.setDataTemp(forecast);
+		if (city.toString().isEmpty()) {
+			throw new ObjectEmptyException("Error: this object is empty");
+		}
 		return city;
 	}
 
@@ -151,7 +163,7 @@ public class TempService implements TempInterface {
 	 *          metodo che deriva da una superclasse o da un'interfaccia
 	 */
 	@Override
-	public JSONObject createJSON(City city) {
+	public JSONObject createJSON(City city) throws JSONObjectNullException {
 
 		JSONObject out = new JSONObject();
 		out.put("City", city.getName());
@@ -177,6 +189,11 @@ public class TempService implements TempInterface {
 		JSONObject obj = new JSONObject();
 		obj.put("City Information", out);
 		obj.put("Temp Information", weather);
+		
+		if(obj == null)
+		{
+			throw new JSONObjectNullException("Error: this JSONObject is null");
+		}
 
 		return obj;
 	}
