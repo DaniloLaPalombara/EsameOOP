@@ -36,7 +36,7 @@ Come precedentemente esposto, l'applicazione si concentra sulla raccolta e l'ana
 - percepita
  
 Ciò è possibile farlo sia sulle temperature correnti, sia su uno storico delle temperature.
-L'applicazione consente anche di confrontare lo storico sulla temperatura effettiva e percepita in un dato intervallo temporale, con le informazioni attuali sempre sulle temperature e di effettuare statistche riguardanti:
+L'applicazione consente anche di confrontare lo storico sulla temperatura effettiva e percepita in un dato intervallo temporale, con le informazioni attuali sempre sulle temperature e di effettuare statistiche riguardanti:
 - valori massimi
 - valori minimi
 - media
